@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:WPF_barber_proto"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow" Height="700" Width="1300">
-    
+        Title="MainWindow" Height="600" Width="920">
+    <!--previous idea-->
     <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -63,13 +63,96 @@
     </Grid>-->
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Click="ButtonFirst_Click" x:Name="ButtonFirst" Height="30" Width="100" >Button 1</Button>
-        <DataGrid Grid.Row="2" ItemsSource="{Binding}" x:Name="Week_Schedule" Visibility="Collapsed"></DataGrid>
+        <StackPanel x:Name="buttons" 
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+            <Button Click="ButtonFirst_Click" 
+                    x:Name="ButtonFirst" 
+                    Height="30" 
+                    Width="100">Button 1</Button>
+            <Button Click="ButtonSecond_Click"
+                    x:Name="ButtonSecond" 
+                    Height="30"
+                    Width="100">Button 2</Button>
+            <Button x:Name="ButtonThird" 
+                    Height="30"
+                    Width="100">Button 3</Button>
+        </StackPanel>
+        <Label HorizontalAlignment="Center"
+               Width="auto"
+               Grid.Row="1" 
+               FontSize="30"
+               Content="Reservations"/>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,20,0">
+            <TextBox Height="20"
+                     Width="100"></TextBox>
+            <Button x:Name="Search">Search</Button>
+        </StackPanel>
+        <Grid Grid.Row="2"
+              x:Name="Reserve_cal">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="1"
+                       Text="Monday"/>
+            <TextBlock Grid.Column="2"
+                       Text="Tuesday"/>
+            <TextBlock Grid.Column="3" 
+                       Text="Wednesday"/>
+            <TextBlock Grid.Column="4" 
+                       Text="Thursday"/>
+            <TextBlock Grid.Column="5"
+                       Text="Friday"/>
+            <TextBlock Grid.Column="6" 
+                       Text="Saturday"/>
+            <TextBlock Grid.Column="7" 
+                       Text="Sunday"/>
+        </Grid>
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding}"
+                  x:Name="Week_Schedule"
+                  Visibility="Collapsed"/>
     </Grid>
+    
     
 
 </Window>

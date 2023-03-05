@@ -24,7 +24,6 @@ namespace WPF_barber_proto
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -32,7 +31,7 @@ namespace WPF_barber_proto
         }
         private void ButtonFirst_Click(object sender, RoutedEventArgs e)
         {
-            MySqlConnection connection = new MySqlConnection("Server=4.tcp.eu.ngrok.io;Port=19082;User ID=root;Database=ds_assignment_auction");
+            MySqlConnection connection = new MySqlConnection("Server=2.tcp.eu.ngrok.io;Port=11822;User ID=root;Database=ds_assignment_auction");
             connection.Open();
             MySqlCommand command = new MySqlCommand("SELECT auction_id,product_name,auction_start_time,auction_end_time FROM auction",connection);
             Week_Schedule.ItemsSource=command.ExecuteReader();
@@ -42,6 +41,10 @@ namespace WPF_barber_proto
         {
             Week_Schedule.Visibility= Visibility.Collapsed;
         }
+
+
+
+        //was trying out oledb (Access database), but found a way to use implement mysql 
         private OleDbConnection OpenDB()
         {
             string connectionStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source = C:\repos\access_db\barberDB.mdb";
