@@ -61,7 +61,7 @@
         </Grid>
          <ComboBox Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="0" Margin="125,30,0,0" Grid.Row="7" VerticalAlignment="Top" Width="120"/>
     </Grid>-->
-    <Grid>
+    <Grid x:Name="TopHeader">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -78,11 +78,13 @@
                     x:Name="ButtonSecond" 
                     Height="30"
                     Width="100">Button 2</Button>
-            <Button x:Name="ButtonThird" 
+            <Button Click="ButtonThird_Click"
+                    x:Name="ButtonThird" 
                     Height="30"
                     Width="100">Button 3</Button>
         </StackPanel>
-        <Label HorizontalAlignment="Center"
+        <Label x:Name="MainTitle"
+               HorizontalAlignment="Center"
                Width="auto"
                Grid.Row="1" 
                FontSize="30"
@@ -100,6 +102,8 @@
               x:Name="Reserve_cal">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
