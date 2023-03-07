@@ -27,9 +27,28 @@ namespace WPF_barber_proto
             InitializeComponent();
             AddReserveTimeBlock();
         }
-        
-        
-        
+        private MySqlConnection OpenConnection()
+        {
+            MySqlConnection connection = new MySqlConnection("Server=5.tcp.eu.ngrok.io;Port=14624;User ID=root;Database=ds_assignment_auction");
+            connection.Open();
+            return connection;
+        }
+        private MySqlDataReader QueryGetter(string query) 
+        {
+            //connecting to mysql db requires 3 steps:
+
+            //create connection + open or close during usages
+            MySqlConnection connection = OpenConnection();
+
+            //create command
+            MySqlCommand command = new MySqlCommand(query, connection);
+            
+            //execute the command and save to reader
+            MySqlDataReader reader = command.ExecuteReader();
+            return reader;
+        }
+
+
         private void ButtonFirst_Click(object sender, RoutedEventArgs e)
         {
             AddReserveTimeBlock();
@@ -38,19 +57,15 @@ namespace WPF_barber_proto
             Reserve_cal.Visibility = Visibility.Visible;
         }
         
+
         private void ButtonSecond_Click(object sender, RoutedEventArgs e)
         {
-            //connecting to mysql db requires 3 steps:
             
-            //create connection + open or close during usages
-            MySqlConnection connection = new MySqlConnection("Server=4.tcp.eu.ngrok.io;Port=17712;User ID=root;Database=ds_assignment_auction");
-            connection.Open();
 
-            //create command
-            MySqlCommand command = new MySqlCommand("SELECT auction_id,product_name,auction_start_time,auction_end_time FROM auction", connection);
-            
+            MySqlDataReader reader = QueryGetter("SELECT auction_id,product_name,auction_start_time,auction_end_time FROM auction");
             //execute the command
-            Week_Schedule.ItemsSource = command.ExecuteReader();
+            Week_Schedule.ItemsSource = reader;
+
 
             MainTitle.Content = "Add or Remove data";
             CollaspAllView();
@@ -67,6 +82,8 @@ namespace WPF_barber_proto
             Week_Schedule.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
         }
+
+        
 
         private void AddReserveTimeBlock()
         {
@@ -95,13 +112,13 @@ namespace WPF_barber_proto
         }
 
         //was trying out oledb (Access database), but found a way to use implement mysql 
-        private OleDbConnection OpenDB()
-        {
-            string connectionStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source = C:\repos\access_db\barberDB.mdb";
-            OleDbConnection connection = new OleDbConnection(connectionStr);
-            connection.Open();
-            return connection;
-        }
+        //private OleDbConnection OpenDB()
+        //{
+        //    string connectionStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source = C:\repos\access_db\barberDB.mdb";
+        //    OleDbConnection connection = new OleDbConnection(connectionStr);
+        //    connection.Open();
+        //    return connection;
+        //}
 
     }
 }
