@@ -29,7 +29,9 @@ namespace WPF_barber_proto
         }
         private MySqlConnection OpenConnection()
         {
-            MySqlConnection connection = new MySqlConnection("Server=5.tcp.eu.ngrok.io;Port=14624;User ID=root;Database=ds_assignment_auction");
+            //for final iteration
+            //MySqlConnection connection = new MySqlConnection("Server=6.tcp.eu.ngrok.io;Port=12710;User ID=root;Database=ds_assignment_auction");
+            MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");
             connection.Open();
             return connection;
         }
@@ -62,14 +64,18 @@ namespace WPF_barber_proto
         {
             
 
-            MySqlDataReader reader = QueryGetter("SELECT auction_id,product_name,auction_start_time,auction_end_time FROM auction");
-            //execute the command
-            Week_Schedule.ItemsSource = reader;
-
+            MySqlDataReader reader = QueryGetter("SELECT * FROM customer");
+            
+            while (reader.Read())
+            {
+                string myString = reader.GetString(1); //The 0 stands for "the 0'th column", so the first column of the result.
+                                                 // Do somthing with this rows string, for example to put them in to a list
+                firstRow.Text= myString;
+            }
 
             MainTitle.Content = "Add or Remove data";
             CollaspAllView();
-            Week_Schedule.Visibility = Visibility.Visible;
+            SecondGrid.Visibility = Visibility.Visible;
         }
         private void ButtonThird_Click(object sender, RoutedEventArgs e)
         {
@@ -79,7 +85,7 @@ namespace WPF_barber_proto
 
         private void CollaspAllView()
         {
-            Week_Schedule.Visibility = Visibility.Collapsed;
+            SecondGrid.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
         }
 
