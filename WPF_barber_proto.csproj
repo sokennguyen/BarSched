@@ -81,19 +81,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="EditorPages\Customer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditorPages\Package.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditorPages\Service.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="EditorPages\Staff.xaml">
+    <Compile Include="CustomerSubpage.xaml.cs">
+      <DependentUpon>CustomerSubpage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CustomerSubpage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -104,18 +95,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EditorPages\Customer.xaml.cs">
-      <DependentUpon>Customer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditorPages\Package.xaml.cs">
-      <DependentUpon>Package.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditorPages\Service.xaml.cs">
-      <DependentUpon>Service.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditorPages\Staff.xaml.cs">
-      <DependentUpon>Staff.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -152,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="shear_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

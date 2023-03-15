@@ -5,6 +5,8 @@ using MySqlConnector;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace WPF_barber_proto
 {
@@ -34,20 +36,18 @@ namespace WPF_barber_proto
 
         public double GetBalance(Customer customer)
         {
-            string cID = customer.CustID;
+            string cID = customer.Id;
             return myDB.GetBalanceOfCustomer(cID);
         }
 
-        public List<Customer> GetCustomers()
+        public List<Customer> ListCustomers()
         {
-            //DBService myDataBase = new DBService();
-            return myDB.ListAllCustomersSorted();
+            return myDB.ListCustomers();
         }
 
-        public string ListAllCustomers()
+        public string StringAllCustomer()
         {
-            //DBService myDataBase = new DBService();
-            List<Customer> allCustomers = myDB.ListAllCustomersSorted();
+            List<Customer> allCustomers = myDB.ListCustomers();
 
             StringBuilder custList = new StringBuilder();
 
@@ -61,26 +61,31 @@ namespace WPF_barber_proto
     class Customer
     {
         private string name;
-        private string custID;
-
-        public Customer(string nm, string id)
+        private string id;
+        private string phone;
+        public Customer(string id, string nm, string phone)
         {
-            name = nm;
-            custID = id;
+            this.id = id;
+            this.name = nm;            
+            this.phone = phone;
         }
 
         public override string ToString()
         {
-            return name + ": " + custID;
+            return id + " : " + name + " : " + phone;
         }
-        public string CustID
+        public string Id
         {
-            get { return custID; }
+            get { return id; }
         }
 
         public string Name
         {
             get { return name; }
+        }
+        public string Phone
+        {
+            get { return phone; }
         }
 
     }
@@ -107,7 +112,7 @@ namespace WPF_barber_proto
 
         private string FindValidNewCustId()
         {
-            List<Customer> allCust = ListAllCustomers();
+            List<Customer> allCust = ListCustomers();
             int proposedID = 0;
             Boolean validFound = false;
             while (!validFound)
@@ -116,7 +121,7 @@ namespace WPF_barber_proto
                 validFound = true;
                 foreach (Customer c in allCust)
                 {
-                    if (c.CustID == proposedID.ToString())
+                    if (c.Id == proposedID.ToString())
                     {
                         validFound = false;
                         break;
@@ -135,25 +140,66 @@ namespace WPF_barber_proto
         {
             MySqlCommand command = new MySqlCommand();
             command.Connection = connection;
-            command.CommandText = "INSERT INTO Customer(CustID, Name, Area, Balance) VALUES ('" + id + "','" + name + "','" + area + "','0,0')";
+            command.CommandText = "INSERT INTO Customer(Id, Name, Area, Balance) VALUES ('" + id + "','" + name + "','" + area + "','0,0')";
             command.ExecuteNonQuery();
-        }        
+        }
 
+
+
+
+
+
+
+        //Public listed getters        
+        public List<Customer> ListCustomers()
+        {
+            MySqlDataReader reader = GetReaderData("SELECT customer_id, customer_name, customer_phone FROM customer ORDER BY customer_id");
+
+            Boolean NotEOF = reader.Read();
+
+            List<Customer> custList = new List<Customer>();
+
+            while (NotEOF)
+            {
+                //Console.WriteLine(reader["Name"].ToString() + ": " + reader["Id"].ToString());
+                custList.Add(new Customer(reader["customer_id"].ToString(), reader["customer_name"].ToString(), reader["customer_phone"].ToString()));
+                NotEOF = reader.Read();
+            }
+            return custList;
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Public singular getters
         public double GetPriceOfProduct(string key)
         {
             return GetIntValueFromDB("Price", "Produt", "ProdID", key);
         }
-
-
         public double GetBalanceOfCustomer(string key)
         {
-            return GetIntValueFromDB("Balance", "Customer", "CustID", key);
+            return GetIntValueFromDB("Balance", "Customer", "Id", key);
         }
-
         public string GetCustomerName(string key)
         {
             return GetStringValueFromDB("customer_name", "customer", "customer_id", key);
         }
+
+
+
+
 
         //Query Writer
         private double GetIntValueFromDB(string what, string from, string where, string rule)
@@ -236,7 +282,7 @@ namespace WPF_barber_proto
 
         private bool CustomerNameExists(string name)
         {
-            foreach (Customer c in ListAllCustomers())
+            foreach (Customer c in ListCustomers())
                 if (c.Name == name)
                     return true;
             return false;
@@ -254,52 +300,19 @@ namespace WPF_barber_proto
         }
 
 
-        public List<Customer> ListAllCustomers()
-        {
-            MySqlDataReader reader = GetReaderData("SELECT CustID, Name FROM Customer");
-
-            Boolean NotEOF = reader.Read();
-
-            List<Customer> custList = new List<Customer>();
-
-            while (NotEOF)
-            {
-                //Console.WriteLine(reader["Name"].ToString() + ": " + reader["CustID"].ToString());
-                custList.Add(new Customer(reader["Name"].ToString(), reader["CustID"].ToString()));
-                NotEOF = reader.Read();
-            }
-
-            return custList;
-        }
-
-        public List<Customer> ListAllCustomersSorted()
-        {
-            MySqlDataReader reader = GetReaderData("SELECT CustID, Name FROM Customer ORDER BY CustID");
-
-            Boolean NotEOF = reader.Read();
-
-            List<Customer> custList = new List<Customer>();
-
-            while (NotEOF)
-            {
-                //Console.WriteLine(reader["Name"].ToString() + ": " + reader["CustID"].ToString());
-                custList.Add(new Customer(reader["Name"].ToString(), reader["CustID"].ToString()));
-                NotEOF = reader.Read();
-            }
-
-            return custList;
-        }
+        
 
     }
 
     class UI
     {
+        
         private HairdresserProgram myHairDresserProgram;
 
-        private void ListAllCustomers()
+        private void ListCustomers()
         {
             Console.WriteLine("Currently in the customer list we have:");
-            Console.WriteLine(myHairDresserProgram.ListAllCustomers());
+            Console.WriteLine(myHairDresserProgram.StringAllCustomer());
         }
 
 
@@ -309,7 +322,7 @@ namespace WPF_barber_proto
             {
                 Console.WriteLine("With this program you can add new customer into the database");
                 Console.WriteLine("Currently in the customer list we have:");
-                Console.WriteLine(myHairDresserProgram.ListAllCustomers());
+                Console.WriteLine(myHairDresserProgram.StringAllCustomer());
 
                 Console.WriteLine("Please enter the name of the new customer:");
                 string name = Console.ReadLine();
@@ -320,7 +333,7 @@ namespace WPF_barber_proto
                 myHairDresserProgram.AddNewCustomer(name, area);
                 Console.WriteLine("***********************************");
                 Console.WriteLine("Currently in the customer list we have:");
-                Console.WriteLine(myHairDresserProgram.ListAllCustomers());
+                Console.WriteLine(myHairDresserProgram.StringAllCustomer());
 
                 Console.WriteLine("***********************************");
                 Console.WriteLine("Do you want to continue adding new customers? (Y/N)");
@@ -347,7 +360,7 @@ namespace WPF_barber_proto
                 switch (command)
                 {
                     case "A":
-                        ListAllCustomers();
+                        ListCustomers();
                         break;
                     case "B":
                         AddNewCustomers();

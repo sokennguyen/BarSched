@@ -21,8 +21,8 @@ using System.Runtime.Remoting.Messaging;
 
 namespace WPF_barber_proto
 {    public partial class MainWindow : Window
-    {        
-        DBService dbService = new DBService();
+    {
+        HairdresserProgram HairdresserProgram = new HairdresserProgram();
         public MainWindow()
         {
             InitializeComponent();
@@ -37,8 +37,8 @@ namespace WPF_barber_proto
         }        
 
         private void ButtonSecond_Click(object sender, RoutedEventArgs e)
-        {
-            
+        {           
+
 
             MainTitle.Content = "Add or Remove data";
             CollaspAllView();
@@ -55,8 +55,23 @@ namespace WPF_barber_proto
             Editor.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
         }
+        //private void IniTable()
+        //{
+        //    List<Customer> custList = HairdresserProgram.ListCustomers();
+        //    foreach (Customer customer in custList)
+        //    {
 
-        
+        //    }
+        //}
+
+        //private void AddTextBlock(string inpString, string gridName)
+        //{
+        //    TextBlock textBlock = new TextBlock();
+        //    textBlock.Text = inpString;
+        //    var grid = (Grid)this.FindName(gridName);
+        //    grid.Children.Add(textBlock);
+        //}
+
 
         private void AddReserveTimeBlock()
         {
@@ -87,7 +102,12 @@ namespace WPF_barber_proto
 
         private void Customer_Checked(object sender, RoutedEventArgs e)
         {
+            ContentControl.Content = new CustomerSubpage();
+        }
 
+        private void Staff_Checked(object sender, RoutedEventArgs e)
+        {
+            ContentControl.Content = new CustomerSubpage();
         }
     }
 }

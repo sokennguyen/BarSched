@@ -76,15 +76,15 @@
             <Button Click="ButtonFirst_Click" 
                     x:Name="ButtonFirst" 
                     Height="30" 
-                    Width="100">Button 1</Button>
+                    Width="100">Reservations</Button>
             <Button Click="ButtonSecond_Click"
                     x:Name="ButtonSecond" 
                     Height="30"
-                    Width="100">Button 2</Button>
+                    Width="100">Editor</Button>
             <Button Click="ButtonThird_Click"
                     x:Name="ButtonThird" 
                     Height="30"
-                    Width="100">Button 3</Button>
+                    Width="100">Stats</Button>
         </StackPanel>
         <Label x:Name="MainTitle"
                HorizontalAlignment="Center"
@@ -92,6 +92,8 @@
                Grid.Row="0" 
                FontSize="30"
                Content="Reservations"/>
+        
+        <!--search bar + button
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right"
@@ -100,7 +102,8 @@
             <TextBox Height="20"
                      Width="100"></TextBox>
             <Button x:Name="Search">Search</Button>
-        </StackPanel>
+        </StackPanel>-->
+        
         <Grid Grid.Row="1"
               x:Name="Reserve_cal"
               Margin="0,10"
@@ -161,8 +164,7 @@
               Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200px"/>
-                <ColumnDefinition Width="53*"/>
-                <ColumnDefinition Width="91*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Rectangle Fill="CornflowerBlue"/>
             <StackPanel>
@@ -172,15 +174,16 @@
                              Checked="Customer_Checked"/>
                 <RadioButton x:Name="Staff" 
                              Content="Staff"
-                             FontSize="25"/>
+                             FontSize="25" Checked="Staff_Checked"/>
                 <RadioButton x:Name="Service" 
                              Content="Service"
                              FontSize="25"/>
                 <RadioButton x:Name="Package"
                              Content="Package"
-                             FontSize="25"/>
-
+                             FontSize="25"/>                
             </StackPanel>
+            <ContentControl x:Name="ContentControl"
+                            Grid.Column="1"/>
         </Grid>
     </Grid>
 
