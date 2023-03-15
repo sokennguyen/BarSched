@@ -21,61 +21,28 @@ using System.Runtime.Remoting.Messaging;
 
 namespace WPF_barber_proto
 {    public partial class MainWindow : Window
-    {
+    {        
+        DBService dbService = new DBService();
         public MainWindow()
         {
             InitializeComponent();
-            AddReserveTimeBlock();
+            AddReserveTimeBlock();            
         }
-        private MySqlConnection OpenConnection()
-        {
-            //for final iteration
-            //MySqlConnection connection = new MySqlConnection("Server=6.tcp.eu.ngrok.io;Port=12710;User ID=root;Database=ds_assignment_auction");
-            MySqlConnection connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");
-            connection.Open();
-            return connection;
-        }
-        private MySqlDataReader QueryGetter(string query) 
-        {
-            //connecting to mysql db requires 3 steps:
-
-            //create connection + open or close during usages
-            MySqlConnection connection = OpenConnection();
-
-            //create command
-            MySqlCommand command = new MySqlCommand(query, connection);
-            
-            //execute the command and save to reader
-            MySqlDataReader reader = command.ExecuteReader();
-            return reader;
-        }
-
-
         private void ButtonFirst_Click(object sender, RoutedEventArgs e)
         {
             AddReserveTimeBlock();
             MainTitle.Content = "Reservations";
             CollaspAllView();
             Reserve_cal.Visibility = Visibility.Visible;
-        }
-        
+        }        
 
         private void ButtonSecond_Click(object sender, RoutedEventArgs e)
         {
             
 
-            MySqlDataReader reader = QueryGetter("SELECT * FROM customer");
-            
-            while (reader.Read())
-            {
-                string myString = reader.GetString(1); //The 0 stands for "the 0'th column", so the first column of the result.
-                                                 // Do somthing with this rows string, for example to put them in to a list
-                firstRow.Text= myString;
-            }
-
             MainTitle.Content = "Add or Remove data";
             CollaspAllView();
-            SecondGrid.Visibility = Visibility.Visible;
+            Editor.Visibility = Visibility.Visible;
         }
         private void ButtonThird_Click(object sender, RoutedEventArgs e)
         {
@@ -85,7 +52,7 @@ namespace WPF_barber_proto
 
         private void CollaspAllView()
         {
-            SecondGrid.Visibility = Visibility.Collapsed;
+            Editor.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
         }
 
@@ -93,6 +60,7 @@ namespace WPF_barber_proto
 
         private void AddReserveTimeBlock()
         {
+            if (Reserve_cal.Children.Count>9) return;            
             DateTime datetimeTimeBlock = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 30, 0);
             int indexAddRow = 1;
             foreach (RowDefinition row in Reserve_cal.RowDefinitions)
@@ -117,14 +85,9 @@ namespace WPF_barber_proto
             }
         }
 
-        //was trying out oledb (Access database), but found a way to use implement mysql 
-        //private OleDbConnection OpenDB()
-        //{
-        //    string connectionStr = @"Provider=Microsoft.Jet.OLEDB.4.0;Data Source = C:\repos\access_db\barberDB.mdb";
-        //    OleDbConnection connection = new OleDbConnection(connectionStr);
-        //    connection.Open();
-        //    return connection;
-        //}
+        private void Customer_Checked(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }
