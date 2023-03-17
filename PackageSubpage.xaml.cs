@@ -15,9 +15,12 @@ using System.Windows.Shapes;
 
 namespace WPF_barber_proto
 {
-    public partial class CustomerSubpage : UserControl
+    /// <summary>
+    /// Interaction logic for PackageSubpage.xaml
+    /// </summary>
+    public partial class PackageSubpage : UserControl
     {
-        public CustomerSubpage()
+        public PackageSubpage()
         {
             InitializeComponent();
             RenderTable();
@@ -26,17 +29,16 @@ namespace WPF_barber_proto
         private void RenderTable()
         {
             int rowIndex = 1;
-            List<Customer> custList = HairdresserProgram.ListCustomers();
-            foreach (Customer customer in custList)
-            {   
+            List<Package> packageList = HairdresserProgram.ListPackage();
+            foreach (Package package in packageList)
+            {
                 AddRowDef("table");
 
                 if (rowIndex % 2 == 0) AddRowBgColor("green", "table", rowIndex, 3);
                 else AddRowBgColor("yellow", "table", rowIndex, 3);
 
-                AddTextBlock(customer.Id.ToString(), "table",rowIndex,0);
-                AddTextBlock(customer.Name.ToString(), "table", rowIndex,1);
-                AddTextBlock(customer.Phone.ToString(), "table", rowIndex,2);  
+                AddTextBlock(package.Id.ToString(), "table", rowIndex, 0);
+                AddTextBlock(package.Name.ToString(), "table", rowIndex, 1);
                 rowIndex++;
             }
 
@@ -48,7 +50,7 @@ namespace WPF_barber_proto
 
             }
         }
-        
+
         protected void AddRowDef(string gridName)
         {
             var grid = (Grid)this.FindName(gridName);

@@ -84,7 +84,23 @@
     <Compile Include="CustomerSubpage.xaml.cs">
       <DependentUpon>CustomerSubpage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DatagridTest.xaml.cs">
+      <DependentUpon>DatagridTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PackageSubpage.xaml.cs">
+      <DependentUpon>PackageSubpage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceSubpage.xaml.cs">
+      <DependentUpon>ServiceSubpage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StaffSubpage.xaml.cs">
+      <DependentUpon>StaffSubpage.xaml</DependentUpon>
+    </Compile>
     <Page Include="CustomerSubpage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DatagridTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -100,6 +116,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PackageSubpage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ServiceSubpage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StaffSubpage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

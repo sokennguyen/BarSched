@@ -6,61 +6,7 @@
         xmlns:local="clr-namespace:WPF_barber_proto"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow" Height="600" Width="920">
-    <!--previous idea-->
-    <!--<Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions >
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
-            <Button Click="ButtonFirst_Click" x:Name="ButtonFirst" Height="30" Width="100" >Button 1</Button>
-            <Button Click="ButtonSecond_Click" x:Name="ButtonSecond" Width="100">Button 2</Button>
-            <Button x:Name="ButtonThird" Width="100" >Button 3</Button>
-        </StackPanel>
-        <Label x:Name="Title" Grid.Column="3" Grid.Row="1" HorizontalContentAlignment="Center" FontSize="18" FontWeight="Bold">THIS IS A LABEL</Label>
-        <StackPanel Width="300" FlowDirection="RightToLeft" Orientation="Horizontal" Grid.Column="5" Grid.ColumnSpan="2" Height="20" Grid.Row="1">
-            <Button Width="100">Search</Button>
-            <TextBox Width="150"/>
-        </StackPanel>
-        <Grid x:Name="Display_Reservations" Grid.Row="2" Grid.RowSpan="22" Grid.ColumnSpan="7">
-            <Grid x:Name="Reservations_Headings" Grid.Row="2" Grid.ColumnSpan="7">
-                <Label Grid.Row="2" >monday</Label>
-            </Grid>
-        </Grid>
-         <ComboBox Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="0" Margin="125,30,0,0" Grid.Row="7" VerticalAlignment="Top" Width="120"/>
-    </Grid>-->
+        Title="MainWindow" Height="600" Width="920">   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -92,7 +38,7 @@
                Grid.Row="0" 
                FontSize="30"
                Content="Reservations"/>
-        
+
         <!--search bar + button
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal" 
@@ -103,7 +49,7 @@
                      Width="100"></TextBox>
             <Button x:Name="Search">Search</Button>
         </StackPanel>-->
-        
+
         <Grid Grid.Row="1"
               x:Name="Reserve_cal"
               Margin="0,10"
@@ -164,7 +110,7 @@
               Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200px"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Rectangle Fill="CornflowerBlue"/>
             <StackPanel>
@@ -177,10 +123,12 @@
                              FontSize="25" Checked="Staff_Checked"/>
                 <RadioButton x:Name="Service" 
                              Content="Service"
-                             FontSize="25"/>
+                             FontSize="25" Checked="Service_Checked"/>
                 <RadioButton x:Name="Package"
                              Content="Package"
-                             FontSize="25"/>                
+                             FontSize="25" Checked="Package_Checked"/>
+                <RadioButton x:Name="DatagridTest"
+                             Content="DatagridTest" Checked="DatagridTest_Checked"/>
             </StackPanel>
             <ContentControl x:Name="ContentControl"
                             Grid.Column="1"/>

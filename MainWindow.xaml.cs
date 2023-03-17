@@ -107,7 +107,22 @@ namespace WPF_barber_proto
 
         private void Staff_Checked(object sender, RoutedEventArgs e)
         {
-            ContentControl.Content = new CustomerSubpage();
+            ContentControl.Content = new StaffSubpage();
+        }
+
+        private void Package_Checked(object sender, RoutedEventArgs e)
+        {
+            ContentControl.Content = new PackageSubpage();
+        }
+
+        private void Service_Checked(object sender, RoutedEventArgs e)
+        {
+            ContentControl.Content = new ServiceSubpage(); 
+        }
+
+        private void DatagridTest_Checked(object sender, RoutedEventArgs e)
+        {
+            ContentControl.Content = new DatagridTest();
         }
     }
 }
