@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,20 +34,12 @@ namespace WPF_barber_proto
         {
             InitializeComponent();
             data.ItemsSource = HairdresserProgram.ListStaff();
-            
         }       
         
- 
-   
         
- 
-        private void dgEmp_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            
-        }
 
         private void Add_Click(object sender, RoutedEventArgs e)
-        {
+        {  
             Staff staff;
             string value = AddBox.Text;
             List<Staff> AlteredStaffList = new List<Staff>();
@@ -65,33 +60,34 @@ namespace WPF_barber_proto
                     data.ItemsSource = HairdresserProgram.ListStaff();
                     MessageBox.Show("Something went wrong", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                
             }
+            AddBox.Text = "";
         }
+
         
-        //private void dgEmp_PreviewKeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.Delete && !isBeingEdited)
-        //    {
-        //        var grid = (DataGrid)sender;
-        //        if (grid.SelectedItems.Count > 0)
-        //        {
-        //            var Res = MessageBox.Show("Are you sure you want to delete " + grid.SelectedItems.Count + " Employees?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-        //            if (Res == MessageBoxResult.Yes)
-        //            {
-        //                foreach (var row in grid.SelectedItems)
-        //                {
-        //                    Employee employee = row as Employee;
-        //                    context.Employees.Remove(employee);
-        //                
-        //                context.SaveChanges();
-        //                MessageBox.Show(grid.SelectedItems.Count + " Employees have being deleted!");
-        //            }
-        //            else
-        //                dgEmp.ItemsSource = GetEmployeeList();
-        //        }
-        //    }
-        //}
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            int countSelected = data.SelectedItems.Count;
+            if (data.SelectedItems.Count > 0)
+            {
+                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Employees?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (Res == MessageBoxResult.Yes)
+                {
+                    foreach (var row in data.SelectedItems)
+                    {
+                        Staff staff = row as Staff;
+                        HairdresserProgram.DeleteStaff(staff); 
+                    }
+                    MessageBox.Show(countSelected + " Employees have being deleted!");
+                    data.ItemsSource = HairdresserProgram.ListStaff();
+                }
+            }
+
+           
+        }
+
+
+
 
         private void dgEmp_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {

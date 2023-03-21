@@ -55,22 +55,7 @@ namespace WPF_barber_proto
             Editor.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
         }
-        //private void IniTable()
-        //{
-        //    List<Customer> custList = HairdresserProgram.ListCustomers();
-        //    foreach (Customer customer in custList)
-        //    {
-
-        //    }
-        //}
-
-        //private void AddTextBlock(string inpString, string gridName)
-        //{
-        //    TextBlock textBlock = new TextBlock();
-        //    textBlock.Text = inpString;
-        //    var grid = (Grid)this.FindName(gridName);
-        //    grid.Children.Add(textBlock);
-        //}
+        
 
 
         private void AddReserveTimeBlock()

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace WPF_barber_proto
 {
@@ -34,10 +35,17 @@ namespace WPF_barber_proto
         {
             myDB.DeleteCustomer(name);
         }
+        public void RemoveStaffByName(string name)
+        {
+            myDB.DeleteStaff(name);    
+        }
+
+        public void DeleteStaff(Staff staff)
+        {
+            myDB.DeleteStaff(staff);
+        }
 
 
-
-        
 
         public bool SaveStaffChanges(List<Staff> staffList)
         {
@@ -45,8 +53,14 @@ namespace WPF_barber_proto
             if (staffList.Count() > ListStaff().Count())
             {
                 succeededSave=myDB.AddNewStaff(staffList[staffList.Count()-1].Name);
+                succeededSave = true;
+            }
+            else if (staffList.Count() < ListStaff().Count())
+            {
+                succeededSave = myDB.AddNewStaff(staffList[staffList.Count() - 1].Name);
                 return true;
             }
+            else succeededSave = false;
             return succeededSave;
         }
 
@@ -107,9 +121,9 @@ namespace WPF_barber_proto
     class Customer
     {
         private string name;
-        private string id;
+        private int id;
         private string phone;
-        public Customer(string id, string nm, string phone)
+        public Customer(int id, string nm, string phone)
         {
             this.id = id;
             this.name = nm;            
@@ -120,7 +134,7 @@ namespace WPF_barber_proto
         {
             return id + " : " + name + " : " + phone;
         }
-        public string Id
+        public int Id
         {
             get { return id; }
         }
@@ -272,7 +286,7 @@ namespace WPF_barber_proto
                 validFound = true;
                 foreach (Customer c in allCust)
                 {
-                    if (c.Id == proposedID.ToString())
+                    if (c.Id == proposedID)
                     {
                         validFound = false;
                         break;
@@ -369,7 +383,7 @@ namespace WPF_barber_proto
             while (NotEOF)
             {
                 //Console.WriteLine(reader["Name"].ToString() + ": " + reader["Id"].ToString());
-                custList.Add(new Customer(reader["customer_id"].ToString(), reader["customer_name"].ToString(), reader["customer_phone"].ToString()));
+                custList.Add(new Customer(Int32.Parse(reader["customer_id"].ToString()), reader["customer_name"].ToString(), reader["customer_phone"].ToString()));
                 NotEOF = reader.Read();
             }
             reader.Close();
@@ -553,7 +567,20 @@ namespace WPF_barber_proto
         {
             if (CustomerNameExists(name))
                 DeleteRowFromTable("Customer", "Name", name);
-        }       
+        }
+        public void DeleteStaff(string name)
+        {
+            if (StaffNameExists(name))
+                DeleteRowFromTable("staff", "name", name);
+        }
+        public void DeleteStaff(Staff staff)
+        {
+            DeleteRowFromTable("staff", "staff_id", staff.Id.ToString());
+        }
+
+
+
+
 
         private void DeleteRowFromTable(string from, string where, string rule)
         {
@@ -563,8 +590,17 @@ namespace WPF_barber_proto
             command.CommandText = commandText;
 
             command.ExecuteNonQuery();
-
         }
+        private void DeleteRowFromTable(string from, string where, int rule)
+        {
+            string commandText = "DELETE FROM " + from + " WHERE " + where + " = '" + rule.ToString() + "'";
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = commandText;
+
+            command.ExecuteNonQuery();
+        }
+
 
 
 
@@ -582,6 +618,32 @@ namespace WPF_barber_proto
                     return true;
             return false;
         }
+        private bool CustomerNameExists(int id)
+        {
+            foreach (Customer c in ListCustomers())
+                if (c.Id == id)
+                    return true;
+            return false;
+        }
+
+
+        private bool StaffNameExists(string name)
+        {
+            foreach (Customer c in ListCustomers())
+                if (c.Name == name)
+                    return true;
+            return false;
+        }
+        private bool StaffIdExists(int id)
+        {
+            foreach (Customer c in ListCustomers())
+                if (c.Id == id)
+                    return true;
+            return false;
+        }
+
+
+
 
 
 
