@@ -18,6 +18,7 @@ using System.Windows.Media.Animation;
 using MySqlConnector;
 using System.Collections.ObjectModel;
 using System.Runtime.Remoting.Messaging;
+using System.Windows.Controls.Primitives;
 
 namespace WPF_barber_proto
 {    public partial class MainWindow : Window
@@ -26,11 +27,9 @@ namespace WPF_barber_proto
         public MainWindow()
         {
             InitializeComponent();
-            AddReserveTimeBlock();            
         }
         private void ButtonFirst_Click(object sender, RoutedEventArgs e)
         {
-            AddReserveTimeBlock();
             MainTitle.Content = "Reservations";
             CollaspAllView();
             Reserve_cal.Visibility = Visibility.Visible;
@@ -108,6 +107,54 @@ namespace WPF_barber_proto
         private void DatagridTest_Checked(object sender, RoutedEventArgs e)
         {
             ContentControl.Content = new DatagridTest();
+        }
+        private void OnButtonClick(object sender, MouseButtonEventArgs e)
+        {
+            // Create a new instance of the page that you want to navigate to.
+            popup newPage = new popup();
+
+            newPage.Show();
+        }
+        private void Reserve_cal_Loaded(object sender, RoutedEventArgs e)
+        {
+            int numRows = 25;
+            int numColumns = 8;
+
+            // Loop through each row in the grid
+            for (int row = 1; row < numRows; row++)
+            {
+                // Loop through each column in the grid
+                for (int col = 1; col < numColumns; col++)
+                {
+                    // Create a new Border (cell) element
+                    Border cell = new Border();
+                    cell.Background = Brushes.White;
+                    Rectangle background = new Rectangle();
+                    background.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("blue"));
+                    TextBlock textblock = new TextBlock();
+
+
+                    // Attach the MouseLeftButtonDown event handler to the cell
+                    cell.MouseLeftButtonDown += GridCell_MouseLeftButtonDown;
+
+                    // Add the cell to the grid at the current row and column
+                    Grid.SetRow(cell, row);
+                    Grid.SetColumn(cell, col);  
+                    Reserve_cal.Children.Add(cell);
+                }
+            }
+        }
+
+        private void GridCell_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Get the clicked cell
+            Border clickedCell = sender as Border;
+
+            // Create a new pop-up window
+            popup popupWindow = new popup();
+
+            // Show the pop-up window
+            popupWindow.ShowDialog();
         }
     }
 }
