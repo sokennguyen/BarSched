@@ -119,6 +119,9 @@
     <Compile Include="PackageSubpage.xaml.cs">
       <DependentUpon>PackageSubpage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="popup.xaml.cs">
+      <DependentUpon>popup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ServiceSubpage.xaml.cs">
       <DependentUpon>ServiceSubpage.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PackageSubpage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="popup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

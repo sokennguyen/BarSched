@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Xml.Linq;
+using System.Reflection.Emit;
+using System.Reflection;
 
 namespace WPF_barber_proto
 {
@@ -85,14 +87,15 @@ namespace WPF_barber_proto
         {
             return myDB.ListStaff();
         }
-        public List<Package> ListPackage()
-        {
-            return myDB.ListPackage();
-        }
         public List<Service> ListService()
         {
             return myDB.ListService();
         }
+        public List<Package> ListPackage()
+        {
+            return myDB.ListPackage();
+        }
+        
 
 
 
@@ -177,6 +180,7 @@ namespace WPF_barber_proto
     }
     class Service
     {
+        static int packageCount=0;
         private string id;
         private string name;
         private int duration;
@@ -213,6 +217,7 @@ namespace WPF_barber_proto
         public bool Sink
         {
             get { return sink; }
+            set { sink=value; }
         }
         public int Package
         {
@@ -588,7 +593,6 @@ namespace WPF_barber_proto
             MySqlCommand command = new MySqlCommand();
             command.Connection = connection;
             command.CommandText = commandText;
-
             command.ExecuteNonQuery();
         }
         private void DeleteRowFromTable(string from, string where, int rule)

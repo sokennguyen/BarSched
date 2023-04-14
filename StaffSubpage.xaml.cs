@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -20,63 +21,78 @@ namespace WPF_barber_proto
     /// </summary>
     public partial class StaffSubpage : UserControl
     {
+        HairdresserProgram HairdresserProgram = new HairdresserProgram();
+        bool isInsertMode = false;
+        bool isBeingEdited = false;
         public StaffSubpage()
         {
             InitializeComponent();
-            RenderTable();
+            data.ItemsSource = HairdresserProgram.ListStaff();
         }
-        HairdresserProgram HairdresserProgram = new HairdresserProgram();
-        private void RenderTable()
+
+
+
+        private void Add_Click(object sender, RoutedEventArgs e)
         {
-            int rowIndex = 1;
-            List<Staff> staffList = HairdresserProgram.ListStaff();
-            foreach (Staff staff in staffList)
+            Staff staff;
+            string value = AddBox.Text;
+            List<Staff> AlteredStaffList = new List<Staff>();
+
+            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new staff?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (InsertRecord == MessageBoxResult.Yes)
             {
-                AddRowDef("table");
+                staff = new Staff(null, value);
+                AlteredStaffList = HairdresserProgram.ListStaff();
+                AlteredStaffList.Add(staff);
+                if (HairdresserProgram.SaveStaffChanges(AlteredStaffList))
+                {
+                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    MessageBox.Show("\"" + staff.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    MessageBox.Show("Something went wrong", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            AddBox.Text = "";
+        }
 
-                if (rowIndex % 2 == 0) AddRowBgColor("green", "table", rowIndex, 3);
-                else AddRowBgColor("yellow", "table", rowIndex, 3);
 
-                AddTextBlock(staff.Id.ToString(), "table", rowIndex, 0);
-                AddTextBlock(staff.Name.ToString(), "table", rowIndex, 1);
-                rowIndex++;
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            int countSelected = data.SelectedItems.Count;
+            if (data.SelectedItems.Count > 0)
+            {
+                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Employees?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (Res == MessageBoxResult.Yes)
+                {
+                    foreach (var row in data.SelectedItems)
+                    {
+                        Staff staff = row as Staff;
+                        HairdresserProgram.DeleteStaff(staff);
+                    }
+                    MessageBox.Show(countSelected + " Employees have being deleted!");
+                    data.ItemsSource = HairdresserProgram.ListStaff();
+                }
             }
 
-        }
-        private void textBlock_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
-            {
 
-            }
         }
 
-        protected void AddRowDef(string gridName)
+
+
+
+        private void dgEmp_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
-            var grid = (Grid)this.FindName(gridName);
-            RowDefinition RowDef = new RowDefinition();
-            RowDef.Height = new GridLength(50);
-            grid.RowDefinitions.Add(RowDef);
+            isInsertMode = true;
         }
-        protected void AddRowBgColor(string color, string gridName, int rowIndex, int colSpan)
+
+        private void dgEmp_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            Rectangle bgRec = new Rectangle();
-            bgRec.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
-            Grid.SetRow(bgRec, rowIndex);
-            Grid.SetColumnSpan(bgRec, colSpan);
-            var grid = (Grid)this.FindName(gridName);
-            grid.Children.Add(bgRec);
+            isBeingEdited = true;
         }
-        protected void AddTextBlock(string inpString, string gridName, int rowIndex, int colIndex)
-        {
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = inpString;
-            var grid = (Grid)this.FindName(gridName);
-            Grid.SetRow(textBlock, rowIndex);
-            Grid.SetColumn(textBlock, colIndex);
-            textBlock.VerticalAlignment = VerticalAlignment.Center;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            grid.Children.Add(textBlock);
-        }
+
+
     }
 }
