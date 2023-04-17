@@ -57,32 +57,32 @@ namespace WPF_barber_proto
         
 
 
-        private void AddReserveTimeBlock()
-        {
-            if (Reserve_cal.Children.Count>9) return;            
-            DateTime datetimeTimeBlock = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 30, 0);
-            int indexAddRow = 1;
-            foreach (RowDefinition row in Reserve_cal.RowDefinitions)
-            {
-                TextBlock outTimeBlock = new TextBlock();
-                string dateTimeBlockString="";
-                if (datetimeTimeBlock.Minute==30)
-                    dateTimeBlockString = datetimeTimeBlock.Hour.ToString() + ":" + datetimeTimeBlock.Minute.ToString();
-                else dateTimeBlockString = datetimeTimeBlock.Hour.ToString() + ":" + datetimeTimeBlock.Minute.ToString() + "0";
-                outTimeBlock.Text = dateTimeBlockString;
+        //private void AddReserveTimeBlock()
+        //{
+        //    if (Reserve_cal.Children.Count>9) return;            
+        //    DateTime datetimeTimeBlock = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 30, 0);
+        //    int indexAddRow = 1;
+        //    foreach (RowDefinition row in Reserve_cal.RowDefinitions)
+        //    {
+        //        TextBlock outTimeBlock = new TextBlock();
+        //        string dateTimeBlockString="";
+        //        if (datetimeTimeBlock.Minute==30)
+        //            dateTimeBlockString = datetimeTimeBlock.Hour.ToString() + ":" + datetimeTimeBlock.Minute.ToString();
+        //        else dateTimeBlockString = datetimeTimeBlock.Hour.ToString() + ":" + datetimeTimeBlock.Minute.ToString() + "0";
+        //        outTimeBlock.Text = dateTimeBlockString;
                 
-                //set row and add into Reserve_cal grid
-                Grid.SetRow(outTimeBlock, indexAddRow);
-                Reserve_cal.Children.Add(outTimeBlock);
+        //        //set row and add into Reserve_cal grid
+        //        Grid.SetRow(outTimeBlock, indexAddRow);
+        //        Reserve_cal.Children.Add(outTimeBlock);
 
-                //increase time and row for next loop
-                if (indexAddRow <23)
-                {
-                    datetimeTimeBlock = datetimeTimeBlock.AddMinutes(30);
-                    indexAddRow++;
-                }
-            }
-        }
+        //        //increase time and row for next loop
+        //        if (indexAddRow <23)
+        //        {
+        //            datetimeTimeBlock = datetimeTimeBlock.AddMinutes(30);
+        //            indexAddRow++;
+        //        }
+        //    }
+        //}
 
         private void Customer_Checked(object sender, RoutedEventArgs e)
         {

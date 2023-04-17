@@ -70,20 +70,24 @@
 
 
 
-
-        <DataGrid x:Name="data"
+        <ScrollViewer Grid.Row="2">
+            <DataGrid x:Name="data"
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
                   CanUserAddRows="True"
+                  FontSize="20"
+                  RowEditEnding="data_RowEditEnding"
                   Grid.Row="2">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}"/>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
 
-            </DataGrid.Columns>
+                </DataGrid.Columns>
 
-        </DataGrid>
+            </DataGrid>
+        </ScrollViewer>
+        
 
 
 

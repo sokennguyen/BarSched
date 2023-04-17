@@ -27,45 +27,44 @@ namespace WPF_barber_proto
         {
             myDB.CloseDB();
         }
+        
 
-
-        public void AddNewCustomer(string name, string area)
+        public bool DeleteCustomer(Customer customer)
         {
-            myDB.AddNewCustomer(name, area);
+            return myDB.DeleteCustomer(customer);
         }
-
-
-        public void RemoveCustomerByName(string name)
-        {
-            myDB.DeleteCustomer(name);
-        }
-        public void RemoveStaffByName(string name)
-        {
-            myDB.DeleteStaff(name);    
-        }
-
         public bool DeleteStaff(Staff staff)
         {
             return myDB.DeleteStaff(staff);
         }
+        
 
-
-
+        //Update
         public bool UpdateStaff(Staff staff)
         {
             return myDB.UpdateStaff(staff);
         }
+        public bool UpdateCustomer(Customer customer)
+        {
+            return myDB.UpdateCustomer(customer);
+        }
 
         public bool SaveStaffChanges(List<Staff> staffList)
         {
-            bool succeededSave=false;
+            bool succeededSave = false;
             if (staffList.Count() > ListStaff().Count())
             {
-                succeededSave=myDB.AddNewStaff(staffList[staffList.Count()-1].Name);
-            }
-            else if (staffList.Count() < ListStaff().Count())
-            {
                 succeededSave = myDB.AddNewStaff(staffList[staffList.Count() - 1].Name);
+            }
+            else succeededSave = false;
+            return succeededSave;
+        }
+        public bool SaveCustomerChanges(List<Customer> custList)
+        {
+            bool succeededSave=false;
+            if (custList.Count() > ListCustomers().Count())
+            {
+                succeededSave = myDB.AddNewCustomer(custList[custList.Count() - 1].Name, custList[custList.Count() - 1].Phone);
             }
             else succeededSave = false;
             return succeededSave;
@@ -145,15 +144,18 @@ namespace WPF_barber_proto
         public int Id
         {
             get { return id; }
+            set { id = value;}
         }
 
         public string Name
         {
             get { return name; }
+            set { name = value; }
         }
         public string Phone
         {
             get { return phone; }
+            set { phone = value; }
         }
 
     }
@@ -362,17 +364,18 @@ namespace WPF_barber_proto
             }
             
         }
-        public void AddNewCustomer(string name, string area)
+        public bool AddNewCustomer(string name, string phone)
         {
-            AddNewCustomer(name, area, FindValidNewStaffId());
+            return AddNewCustomer(name, phone, FindValidNewCustId());
         }
 
-        private void AddNewCustomer(string name, string area, string id)
+        private bool AddNewCustomer(string name, string phone, string id)
         {
             MySqlCommand command = new MySqlCommand();
             command.Connection = connection;
-            command.CommandText = "INSERT INTO Customer(Id, Name, Area, Balance) VALUES ('" + id + "','" + name + "','" + area + "','0,0')";
+            command.CommandText = "INSERT INTO customer(customer_id, customer_name, customer_phone) VALUES ('" + id + "','" + name + "','" + phone + "')";
             command.ExecuteNonQuery();
+            return true;
         }
 
 
@@ -580,16 +583,9 @@ namespace WPF_barber_proto
 
 
         //Deletions
-        public void DeleteCustomer(string name)
+        public bool DeleteCustomer(Customer customer)
         {
-            if (CustomerNameExists(name))
-                DeleteRowFromTable("Customer", "Name", name);
-        }
-        public bool DeleteStaff(string name)
-        {
-            if (StaffNameExists(name))
-                return DeleteRowFromTable("staff", "name", name);
-            return false;
+            return DeleteRowFromTable("customer", "customer_id", customer.Id.ToString());
         }
         public bool DeleteStaff(Staff staff)
         {
@@ -645,7 +641,22 @@ namespace WPF_barber_proto
                 return false;
             }
         }
-        
+        public bool UpdateCustomer(Customer customer)
+        {
+            try
+            {
+                string commandText = "UPDATE customer SET customer_name='" + customer.Name + "', customer_phone ='" + customer.Phone + "' WHERE customer_id='" + customer.Id + "'";
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
+        }
 
 
 
@@ -718,7 +729,6 @@ namespace WPF_barber_proto
                 Console.WriteLine("Please enter the area of the new customer (north, south, west, east):");
                 string area = Console.ReadLine();
 
-                myHairDresserProgram.AddNewCustomer(name, area);
                 Console.WriteLine("***********************************");
                 Console.WriteLine("Currently in the customer list we have:");
                 //Console.WriteLine(myHairDresserProgram.StringAllCustomer());

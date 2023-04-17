@@ -22,12 +22,13 @@
 
 
 
-
-        <TextBox x:Name="AddBox"
-                 Margin="50,0,0,0"
-                 Height="auto"
-                 Grid.Row="0"
+        <StackPanel x:Name="AddBoxes"
+                    Orientation="Horizontal">
+            <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"
+                     Visibility="Hidden"/>
+            <TextBox x:Name="AddBox"
                  Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+        </StackPanel>        
         <StackPanel Grid.Column="1"
                     Grid.Row="0"
                     Orientation="Horizontal">
@@ -67,20 +68,23 @@
 
 
 
-
-        <DataGrid x:Name="data"
+        <ScrollViewer Grid.Row="2"
+                      CanContentScroll="True">
+            <DataGrid x:Name="data"
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
                   CanUserAddRows="True"
-                  Grid.Row="2"
-                  BeginningEdit="data_Editing"
+                  FontSize="20"  
                   RowEditEnding="data_RowEditEnding">
-            <DataGrid.Columns>
-                <DataGridTextColumn Width="50" Header="Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-            </DataGrid.Columns>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="50" Header="Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
 
-        </DataGrid>
+            </DataGrid>
+        </ScrollViewer>
+        
+
 
 
 

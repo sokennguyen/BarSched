@@ -26,47 +26,64 @@ namespace WPF_barber_proto
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Staff staff;
-            string value = AddPhoneBox.Text;
-            List<Staff> AlteredStaffList = new List<Staff>();
+            Customer customer;
+            if (AddNameBox.Text == "" && AddPhoneBox.Text == "")
+            {
+                MessageBox.Show("Please fill in all the fields", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            string value = AddNameBox.Text;
+            List<Customer> AlteredCustomerList = new List<Customer>();
 
-            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new staff?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new customer?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (InsertRecord == MessageBoxResult.Yes)
             {
-                staff = new Staff(null, value);
-                AlteredStaffList = HairdresserProgram.ListStaff();
-                AlteredStaffList.Add(staff);
-                if (HairdresserProgram.SaveStaffChanges(AlteredStaffList))
+                customer = new Customer(-1, value, AddPhoneBox.Text);
+                AlteredCustomerList = HairdresserProgram.ListCustomers();
+                AlteredCustomerList.Add(customer);
+                if (HairdresserProgram.SaveCustomerChanges(AlteredCustomerList))
                 {
-                    data.ItemsSource = HairdresserProgram.ListStaff();
-                    MessageBox.Show("\"" + staff.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                    data.ItemsSource = HairdresserProgram.ListCustomers();
+                    MessageBox.Show("\"" + customer.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    data.ItemsSource = HairdresserProgram.ListCustomers();
                     MessageBox.Show("Something went wrong", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
+            AddNameBox.Text = "";
             AddPhoneBox.Text = "";
         }
 
+
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            bool isComplete = false;
             int countSelected = data.SelectedItems.Count;
             if (data.SelectedItems.Count > 0)
             {
-                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Employees?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Customers?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (Res == MessageBoxResult.Yes)
                 {
                     foreach (var row in data.SelectedItems)
                     {
-                        Staff staff = row as Staff;
-                        HairdresserProgram.DeleteStaff(staff);
+                        Customer customer = row as Customer;
+                        isComplete = HairdresserProgram.DeleteCustomer(customer);
                     }
-                    MessageBox.Show(countSelected + " Employees have being deleted!");
-                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    if (isComplete == false)
+                        MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    data.ItemsSource = HairdresserProgram.ListCustomers();
                 }
             }
+
+
+        }
+        private void data_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            Customer cust = e.Row.DataContext as Customer;
+            if (HairdresserProgram.UpdateCustomer(cust) == false)
+                MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
 

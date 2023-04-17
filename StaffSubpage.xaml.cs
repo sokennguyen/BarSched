@@ -24,7 +24,6 @@ namespace WPF_barber_proto
     public partial class StaffSubpage : UserControl
     {
         HairdresserProgram HairdresserProgram = new HairdresserProgram();
-        string startText="";
         public StaffSubpage()
         {
             InitializeComponent();
@@ -36,6 +35,11 @@ namespace WPF_barber_proto
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             Staff staff;
+            if (AddBox.Text == "")
+            {
+                MessageBox.Show("Please fill in all the fields", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
             string value = AddBox.Text;
             List<Staff> AlteredStaffList = new List<Staff>();
 
@@ -86,9 +90,9 @@ namespace WPF_barber_proto
         }    
         private void data_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            bool isComplete = false;
             Staff stf = e.Row.DataContext as Staff;
-            isComplete = HairdresserProgram.UpdateStaff(stf);
+            if (HairdresserProgram.UpdateStaff(stf)==false)
+                MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
 
