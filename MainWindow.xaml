@@ -55,7 +55,7 @@
               Margin="0,10"
               ShowGridLines="True"
               Loaded="Reserve_cal_Loaded"
-              Visibility="Visible">
+              Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -181,7 +181,7 @@
         </Grid>
         <Grid x:Name="Editor"
               Grid.Row="1"
-              Visibility="Collapsed">
+              Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200px"/>
                 <ColumnDefinition/>
@@ -201,8 +201,6 @@
                 <RadioButton x:Name="Package"
                              Content="Package"
                              FontSize="25" Checked="Package_Checked"/>
-                <RadioButton x:Name="DatagridTest"
-                             Content="DatagridTest" Checked="DatagridTest_Checked"/>
             </StackPanel>
             <ContentControl x:Name="ContentControl"
                             Grid.Column="2"/>

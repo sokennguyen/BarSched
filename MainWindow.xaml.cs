@@ -103,11 +103,6 @@ namespace WPF_barber_proto
         {
             ContentControl.Content = new ServiceSubpage(); 
         }
-
-        private void DatagridTest_Checked(object sender, RoutedEventArgs e)
-        {
-            ContentControl.Content = new DatagridTest();
-        }
         private void OnButtonClick(object sender, MouseButtonEventArgs e)
         {
             // Create a new instance of the page that you want to navigate to.

@@ -10,6 +10,7 @@ using System.Windows;
 using System.Xml.Linq;
 using System.Reflection.Emit;
 using System.Reflection;
+using System.Collections;
 
 namespace WPF_barber_proto
 {
@@ -33,6 +34,7 @@ namespace WPF_barber_proto
             myDB.AddNewCustomer(name, area);
         }
 
+
         public void RemoveCustomerByName(string name)
         {
             myDB.DeleteCustomer(name);
@@ -42,12 +44,17 @@ namespace WPF_barber_proto
             myDB.DeleteStaff(name);    
         }
 
-        public void DeleteStaff(Staff staff)
+        public bool DeleteStaff(Staff staff)
         {
-            myDB.DeleteStaff(staff);
+            return myDB.DeleteStaff(staff);
         }
 
 
+
+        public bool UpdateStaff(Staff staff)
+        {
+            return myDB.UpdateStaff(staff);
+        }
 
         public bool SaveStaffChanges(List<Staff> staffList)
         {
@@ -55,12 +62,10 @@ namespace WPF_barber_proto
             if (staffList.Count() > ListStaff().Count())
             {
                 succeededSave=myDB.AddNewStaff(staffList[staffList.Count()-1].Name);
-                succeededSave = true;
             }
             else if (staffList.Count() < ListStaff().Count())
             {
                 succeededSave = myDB.AddNewStaff(staffList[staffList.Count() - 1].Name);
-                return true;
             }
             else succeededSave = false;
             return succeededSave;
@@ -332,7 +337,7 @@ namespace WPF_barber_proto
 
 
 
-
+        //Adding
         public bool AddNewStaff(string name)
         {
             if (AddNewStaff(name, FindValidNewStaffId())) return true;
@@ -369,6 +374,13 @@ namespace WPF_barber_proto
             command.CommandText = "INSERT INTO Customer(Id, Name, Area, Balance) VALUES ('" + id + "','" + name + "','" + area + "','0,0')";
             command.ExecuteNonQuery();
         }
+
+
+
+
+
+
+
 
 
 
@@ -573,27 +585,37 @@ namespace WPF_barber_proto
             if (CustomerNameExists(name))
                 DeleteRowFromTable("Customer", "Name", name);
         }
-        public void DeleteStaff(string name)
+        public bool DeleteStaff(string name)
         {
             if (StaffNameExists(name))
-                DeleteRowFromTable("staff", "name", name);
+                return DeleteRowFromTable("staff", "name", name);
+            return false;
         }
-        public void DeleteStaff(Staff staff)
+        public bool DeleteStaff(Staff staff)
         {
-            DeleteRowFromTable("staff", "staff_id", staff.Id.ToString());
+            return DeleteRowFromTable("staff", "staff_id", staff.Id.ToString());
         }
 
 
 
 
 
-        private void DeleteRowFromTable(string from, string where, string rule)
+        private bool DeleteRowFromTable(string from, string where, string rule)
         {
-            string commandText = "DELETE FROM " + from + " WHERE " + where + " = '" + rule + "'";
-            MySqlCommand command = new MySqlCommand();
-            command.Connection = connection;
-            command.CommandText = commandText;
-            command.ExecuteNonQuery();
+            
+            try
+            {
+                string commandText = "DELETE FROM " + from + " WHERE " + where + " = '" + rule + "'";
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
         }
         private void DeleteRowFromTable(string from, string where, int rule)
         {
@@ -606,8 +628,24 @@ namespace WPF_barber_proto
         }
 
 
-
-
+        //Updating
+        public bool UpdateStaff(Staff staff)
+        {
+            try
+            {
+                string commandText = "UPDATE staff SET staff_name='" + staff.Name + "' WHERE staff_id='" + staff.Id + "'";
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
+        }
+        
 
 
 
@@ -633,8 +671,8 @@ namespace WPF_barber_proto
 
         private bool StaffNameExists(string name)
         {
-            foreach (Customer c in ListCustomers())
-                if (c.Name == name)
+            foreach (Staff s in ListStaff())
+                if (s.Name == name)
                     return true;
             return false;
         }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +24,7 @@ namespace WPF_barber_proto
     public partial class StaffSubpage : UserControl
     {
         HairdresserProgram HairdresserProgram = new HairdresserProgram();
-        bool isInsertMode = false;
-        bool isBeingEdited = false;
+        string startText="";
         public StaffSubpage()
         {
             InitializeComponent();
@@ -61,6 +62,7 @@ namespace WPF_barber_proto
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            bool isComplete=false;
             int countSelected = data.SelectedItems.Count;
             if (data.SelectedItems.Count > 0)
             {
@@ -70,27 +72,23 @@ namespace WPF_barber_proto
                     foreach (var row in data.SelectedItems)
                     {
                         Staff staff = row as Staff;
-                        HairdresserProgram.DeleteStaff(staff);
+                        isComplete = HairdresserProgram.DeleteStaff(staff);
                     }
-                    MessageBox.Show(countSelected + " Employees have being deleted!");
+                    if (isComplete)
+                        MessageBox.Show(countSelected + " Employees have being deleted!");
+                    if (isComplete==false)
+                        MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     data.ItemsSource = HairdresserProgram.ListStaff();
                 }
             }
 
 
-        }
-
-
-
-
-        private void dgEmp_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        }    
+        private void data_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            isInsertMode = true;
-        }
-
-        private void dgEmp_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            isBeingEdited = true;
+            bool isComplete = false;
+            Staff stf = e.Row.DataContext as Staff;
+            isComplete = HairdresserProgram.UpdateStaff(stf);
         }
 
 

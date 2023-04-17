@@ -113,9 +113,6 @@
     <Compile Include="CustomerSubpage.xaml.cs">
       <DependentUpon>CustomerSubpage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DatagridTest.xaml.cs">
-      <DependentUpon>DatagridTest.xaml</DependentUpon>
-    </Compile>
     <Compile Include="PackageSubpage.xaml.cs">
       <DependentUpon>PackageSubpage.xaml</DependentUpon>
     </Compile>
@@ -129,10 +126,6 @@
       <DependentUpon>StaffSubpage.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomerSubpage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DatagridTest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

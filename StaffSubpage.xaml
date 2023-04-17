@@ -49,9 +49,12 @@
 
 
         <StackPanel Grid.Row="1"
-                    Orientation="Horizontal">
-            <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
-            <TextBox Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+                    Orientation="Horizontal"
+                    x:Name="SeachBoxes">
+            <TextBox x:Name="IdSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
+            <TextBox Name="NameSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
         </StackPanel>
 
         <Button x:Name="SearchButton"
@@ -69,10 +72,12 @@
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
                   CanUserAddRows="True"
-                  Grid.Row="2">
+                  Grid.Row="2"
+                  BeginningEdit="data_Editing"
+                  RowEditEnding="data_RowEditEnding">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="50" Header="Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
 
         </DataGrid>
