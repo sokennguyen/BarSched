@@ -85,13 +85,7 @@ namespace WPF_barber_proto
         }
         public bool SaveServiceChanges(List<Service> servList)
         {
-            bool succeededSave;
-            if (servList.Count() > ListService().Count())
-            {
-                succeededSave = myDB.AddNewService(servList[servList.Count() - 1].Name, servList[servList.Count() - 1].Duration, servList[servList.Count() - 1].Sink, servList[servList.Count() - 1].PackageId);
-            }
-            else succeededSave = false;
-            return succeededSave;
+            return myDB.AddNewService(servList[servList.Count() - 1].Name, servList[servList.Count() - 1].Duration, servList[servList.Count() - 1].Sink, servList[servList.Count() - 1].PackageId);
         }
         public bool SavePackageChanges(List<Package> packList)
         {
@@ -622,9 +616,11 @@ namespace WPF_barber_proto
         }
         private bool AddNewService(string name, int duration, bool sink, int package, string id)
         {
+            int inpSink = 0;
+            if (sink == true) inpSink = 1;
             MySqlCommand command = new MySqlCommand();
             command.Connection = connection;
-            command.CommandText = "INSERT INTO service(service_id, service_name, duration, sink_usage, ref_package_id) VALUES ('" + id + "','" + name + "','" + duration + "','" + sink + "','" + package + "')";
+            command.CommandText = "INSERT INTO service(service_id, service_name, duration, sink_usage, ref_package_id) VALUES ('" + id + "','" + name + "','" + duration + "','" + inpSink.ToString() + "','" + package + "')";
             command.ExecuteNonQuery();
             return true;
         }

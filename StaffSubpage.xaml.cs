@@ -95,6 +95,9 @@ namespace WPF_barber_proto
                 MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }

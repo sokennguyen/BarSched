@@ -75,6 +75,8 @@ namespace WPF_barber_proto
             }
             AddNameBox.Text = "";
             AddDurationBox.Text = "";
+            AddSinkBox.IsChecked = false;
+            AddPackageBox.Text = "";
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
