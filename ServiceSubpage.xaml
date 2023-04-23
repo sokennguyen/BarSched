@@ -22,12 +22,22 @@
 
 
 
-
-        <TextBox x:Name="AddBox"
-                 Margin="50,0,0,0"
-                 Height="auto"
-                 Grid.Row="0"
-                 Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"
+                     Visibility="Hidden"/>
+            <TextBox x:Name="AddNameBox"
+                     Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+            <TextBox x:Name="AddDurationBox"
+                     Width="{Binding ElementName=data, Path=Columns[2].ActualWidth}"/>
+            <CheckBox x:Name="AddSinkBox"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      IsChecked="False"
+                      Width="{Binding ElementName=data, Path=Columns[3].ActualWidth}"/>
+            <TextBox x:Name="AddPackageBox"
+                     Width="{Binding ElementName=data, Path=Columns[4].ActualWidth}"/>
+        </StackPanel>
+        
         <StackPanel Grid.Column="1"
                     Grid.Row="0"
                     Orientation="Horizontal">
@@ -52,6 +62,11 @@
                     Orientation="Horizontal">
             <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
             <TextBox Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+            <TextBox Width="{Binding ElementName=data, Path=Columns[2].ActualWidth}"/>
+            <CheckBox VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      Width="{Binding ElementName=data, Path=Columns[3].ActualWidth}"/>
+            <TextBox Width="{Binding ElementName=data, Path=Columns[4].ActualWidth}"/>
         </StackPanel>
 
         <Button x:Name="SearchButton"
@@ -69,14 +84,15 @@
                   AutoGenerateColumns="False"
                   HeadersVisibility="Column"
                   CanUserAddRows="True"
+                  FontSize="20"
+                  RowEditEnding="data_RowEditEnding"
                   Grid.Row="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="" Header="Id" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Duration" Binding="{Binding Duration}"/>
-                <DataGridCheckBoxColumn Header="Sink" Binding="{Binding Sink}"/>
-                <DataGridComboBoxColumn Header="Package" x:Name="Package"/>
-                
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Duration" Binding="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridCheckBoxColumn Header="Sink" Binding="{Binding Sink, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Package" Binding="{Binding PackageId, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
 
         </DataGrid>

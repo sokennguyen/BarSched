@@ -23,9 +23,63 @@ namespace WPF_barber_proto
         public PackageSubpage()
         {
             InitializeComponent();
-            RenderTable();
+            data.ItemsSource = HairdresserProgram.ListPackage();
         }
         HairdresserProgram HairdresserProgram = new HairdresserProgram();
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            Package package;
+            if (AddBox.Text == "")
+            {
+                MessageBox.Show("Please fill in all the fields", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            string value = AddBox.Text;
+            List<Package> AlteredPackageList = new List<Package>();
+
+            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new package?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (InsertRecord == MessageBoxResult.Yes)
+            {
+                package = new Package(null, value);
+                AlteredPackageList = HairdresserProgram.ListPackage();
+                AlteredPackageList.Add(package);
+                if (HairdresserProgram.SavePackageChanges(AlteredPackageList))
+                    data.ItemsSource = HairdresserProgram.ListPackage();                    
+                else
+                {
+                    data.ItemsSource = HairdresserProgram.ListPackage();
+                    MessageBox.Show("Inserting data is conflicting with the database", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            AddBox.Text = "";
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            bool isComplete = false;
+            int countSelected = data.SelectedItems.Count;
+            if (data.SelectedItems.Count > 0)
+            {
+                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Packages?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (Res == MessageBoxResult.Yes)
+                {
+                    foreach (var row in data.SelectedItems)
+                    {
+                        Package package = row as Package;
+                        isComplete = HairdresserProgram.DeletePackage(package);
+                    }
+                    if (isComplete == false)
+                        MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    data.ItemsSource = HairdresserProgram.ListPackage();
+                }
+            }
+        }
+        private void data_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            Package pkg = e.Row.DataContext as Package;
+            if (HairdresserProgram.UpdatePackage(pkg) == false)
+                MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         private void RenderTable()
         {
             int rowIndex = 1;
@@ -43,14 +97,6 @@ namespace WPF_barber_proto
             }
 
         }
-        private void textBlock_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
-            {
-
-            }
-        }
-
         protected void AddRowDef(string gridName)
         {
             var grid = (Grid)this.FindName(gridName);
@@ -78,5 +124,7 @@ namespace WPF_barber_proto
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
             grid.Children.Add(textBlock);
         }
+
+        
     }
 }

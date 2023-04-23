@@ -26,76 +26,87 @@ namespace WPF_barber_proto
     public partial class ServiceSubpage : UserControl
     {
         HairdresserProgram HairdresserProgram = new HairdresserProgram();
-        bool isInsertMode = false;
-        bool isBeingEdited = false;
         public ServiceSubpage()
         {
             InitializeComponent();
             data.ItemsSource = HairdresserProgram.ListService();
+
+            //string dbug = "";
+            //foreach (Service s in HairdresserProgram.ListService())
+            //{
+            //    dbug += s.ToString();
+            //}
+            //MessageBox.Show(dbug);
         }
 
 
-
+        
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            Staff staff;
-            string value = AddBox.Text;
-            List<Staff> AlteredStaffList = new List<Staff>();
+            Service service;
+            if (AddNameBox.Text == "" || AddDurationBox.Text == "" || AddPackageBox.Text == "")
+            {
+                MessageBox.Show("Please fill in all the fields", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (int.Parse(AddPackageBox.Text) > HairdresserProgram.ListPackage().Count())
+            {
+                MessageBox.Show("This package doesn't exist", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            string value = AddNameBox.Text;
+            List<Service> AlteredServiceList = new List<Service>();
 
-            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new staff?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new Service?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (InsertRecord == MessageBoxResult.Yes)
             {
-                staff = new Staff(null, value);
-                AlteredStaffList = HairdresserProgram.ListStaff();
-                AlteredStaffList.Add(staff);
-                if (HairdresserProgram.SaveStaffChanges(AlteredStaffList))
+                service = new Service(null, value, int.Parse(AddDurationBox.Text), AddSinkBox.IsEnabled, int.Parse(AddPackageBox.Text));
+                AlteredServiceList = HairdresserProgram.ListService();
+                AlteredServiceList.Add(service);
+                if (HairdresserProgram.SaveServiceChanges(AlteredServiceList))
                 {
-                    data.ItemsSource = HairdresserProgram.ListStaff();
-                    MessageBox.Show("\"" + staff.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
+                    data.ItemsSource = HairdresserProgram.ListService();
                 }
                 else
                 {
-                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    data.ItemsSource = HairdresserProgram.ListService();
                     MessageBox.Show("Something went wrong", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
-            AddBox.Text = "";
+            AddNameBox.Text = "";
+            AddDurationBox.Text = "";
         }
-
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            bool isComplete = false;
             int countSelected = data.SelectedItems.Count;
             if (data.SelectedItems.Count > 0)
             {
-                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " Employees?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                var Res = MessageBox.Show("Are you sure you want to delete " + data.SelectedItems.Count + " services?", "Deleting Records", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (Res == MessageBoxResult.Yes)
                 {
                     foreach (var row in data.SelectedItems)
                     {
-                        Staff staff = row as Staff;
-                        HairdresserProgram.DeleteStaff(staff);
+                        Service service = row as Service;
+                        isComplete = HairdresserProgram.DeleteService(service);
                     }
-                    MessageBox.Show(countSelected + " Employees have being deleted!");
-                    data.ItemsSource = HairdresserProgram.ListStaff();
+                    if (isComplete == false)
+                        MessageBox.Show(countSelected + " services have being deleted!");
+                    data.ItemsSource = HairdresserProgram.ListService();
                 }
             }
-
-
         }
-
-
-
-
-        private void dgEmp_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        private void data_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            isInsertMode = true;
+            Service serv = e.Row.DataContext as Service;
+            if (HairdresserProgram.UpdateService(serv) == false)
+                MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void dgEmp_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            isBeingEdited = true;
-        }
+
+
+
 
 
     }

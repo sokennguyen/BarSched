@@ -28,7 +28,7 @@ namespace WPF_barber_proto
             myDB.CloseDB();
         }
         
-
+        //Delete
         public bool DeleteCustomer(Customer customer)
         {
             return myDB.DeleteCustomer(customer);
@@ -37,7 +37,14 @@ namespace WPF_barber_proto
         {
             return myDB.DeleteStaff(staff);
         }
-        
+        public bool DeleteService(Service service)
+        {
+            return myDB.DeleteService(service);
+        }
+        public bool DeletePackage(Package package)
+        {
+            return myDB.DeletePackage(package);
+        }
 
         //Update
         public bool UpdateStaff(Staff staff)
@@ -48,7 +55,24 @@ namespace WPF_barber_proto
         {
             return myDB.UpdateCustomer(customer);
         }
-
+        public bool UpdateService(Service service)
+        {
+            return myDB.UpdateService(service);
+        }
+        public bool UpdatePackage(Package package)
+        {
+            return myDB.UpdatePackage(package);
+        }
+        public bool SaveCustomerChanges(List<Customer> custList)
+        {
+            bool succeededSave = false;
+            if (custList.Count() > ListCustomers().Count())
+            {
+                succeededSave = myDB.AddNewCustomer(custList[custList.Count() - 1].Name, custList[custList.Count() - 1].Phone);
+            }
+            else succeededSave = false;
+            return succeededSave;
+        }
         public bool SaveStaffChanges(List<Staff> staffList)
         {
             bool succeededSave = false;
@@ -59,12 +83,22 @@ namespace WPF_barber_proto
             else succeededSave = false;
             return succeededSave;
         }
-        public bool SaveCustomerChanges(List<Customer> custList)
+        public bool SaveServiceChanges(List<Service> servList)
         {
-            bool succeededSave=false;
-            if (custList.Count() > ListCustomers().Count())
+            bool succeededSave;
+            if (servList.Count() > ListService().Count())
             {
-                succeededSave = myDB.AddNewCustomer(custList[custList.Count() - 1].Name, custList[custList.Count() - 1].Phone);
+                succeededSave = myDB.AddNewService(servList[servList.Count() - 1].Name, servList[servList.Count() - 1].Duration, servList[servList.Count() - 1].Sink, servList[servList.Count() - 1].PackageId);
+            }
+            else succeededSave = false;
+            return succeededSave;
+        }
+        public bool SavePackageChanges(List<Package> packList)
+        {
+            bool succeededSave = false;
+            if (packList.Count() > ListPackage().Count())
+            {
+                succeededSave = myDB.AddNewPackage(packList[packList.Count() - 1].Name);
             }
             else succeededSave = false;
             return succeededSave;
@@ -187,26 +221,24 @@ namespace WPF_barber_proto
     }
     class Service
     {
-        static int packageCount=0;
+        
         private string id;
         private string name;
         private int duration;
         private bool sink;
-        private int package;
-        private string packageName;
-        public Service(string id, string nm, int duration, bool sink, int package, string packageName)
+        private int packageId;
+        public Service(string id, string nm, int duration, bool sink, int package)
         {
             this.id = id;
             this.name = nm;
             this.duration= duration;
             this.sink = sink;
-            this.package = package;
-            this.packageName = packageName;
+            this.packageId = package;
         }
 
         public override string ToString()
         {
-            return id + " : " + name + " : " + duration + "mins : " + sink + ":" + package;
+            return id + " : " + name + " : " + duration + "mins : " + sink + ":" + packageId;
         }
         public string Id
         {
@@ -216,25 +248,23 @@ namespace WPF_barber_proto
         public string Name
         {
             get { return name; }
+            set { name = value; }
         }
         public int Duration
         {
             get { return duration; }
+            set { duration = value; }
         }
         public bool Sink
         {
             get { return sink; }
             set { sink=value; }
         }
-        public int Package
+        public int PackageId
         {
-            get { return package; }
+            get { return packageId; }
+            set { packageId = value; }
         }
-        public string PackageName
-        {
-            get { return packageName; }
-        }
-
     }
     class Package
     {
@@ -258,6 +288,7 @@ namespace WPF_barber_proto
         public string Name
         {
             get { return name; }
+            set { name = value;}
         }
     }
 
@@ -276,8 +307,8 @@ namespace WPF_barber_proto
         private void OpenConnection()
         {
             //for final iteration
-            //MySqlConnection connection = new MySqlConnection("Server=6.tcp.eu.ngrok.io;Port=12710;User ID=root;Database=ds_assignment_auction");
-            connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");            
+            connection = new MySqlConnection("Server=6.tcp.eu.ngrok.io;Port=19746;User ID=root;Database=barber");
+            //connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");            
             connection.Open();
         }
 
@@ -327,69 +358,46 @@ namespace WPF_barber_proto
             }
             return proposedID.ToString();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-        //Adding
-        public bool AddNewStaff(string name)
+        private string FindValidNewServId()
         {
-            if (AddNewStaff(name, FindValidNewStaffId())) return true;
-            return false;
-        }
-
-        private bool AddNewStaff(string name, string id)
-        {
-            try
+            List<Service> allServ = ListService();
+            int proposedID = 0;
+            Boolean validFound = false;
+            while (!validFound)
             {
-                MySqlCommand command = new MySqlCommand();
-                command.Connection = connection;
-                command.CommandText = "INSERT INTO staff(staff_id, staff_name) VALUES ('" + id + "','" + name + "')";
-                command.ExecuteNonQuery();
-                return true;
+                proposedID++;
+                validFound = true;
+                foreach (Service s in allServ)
+                {
+                    if (s.Id == proposedID.ToString())
+                    {
+                        validFound = false;
+                        break;
+                    }
+                }
             }
-            catch (Exception)
+            return proposedID.ToString();
+        }
+        private string FindValidNewPackId()
+        {
+            List<Package> allPack = ListPackage();
+            int proposedID = 0;
+            Boolean validFound = false;
+            while (!validFound)
             {
-
-                throw new Exception();
-                
+                proposedID++;
+                validFound = true;
+                foreach (Package p in allPack)
+                {
+                    if (p.Id == proposedID.ToString())
+                    {
+                        validFound = false;
+                        break;
+                    }
+                }
             }
-            
+            return proposedID.ToString();
         }
-        public bool AddNewCustomer(string name, string phone)
-        {
-            return AddNewCustomer(name, phone, FindValidNewCustId());
-        }
-
-        private bool AddNewCustomer(string name, string phone, string id)
-        {
-            MySqlCommand command = new MySqlCommand();
-            command.Connection = connection;
-            command.CommandText = "INSERT INTO customer(customer_id, customer_name, customer_phone) VALUES ('" + id + "','" + name + "','" + phone + "')";
-            command.ExecuteNonQuery();
-            return true;
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        
 
         //Public list getters        
         public List<Customer> ListCustomers()
@@ -428,7 +436,7 @@ namespace WPF_barber_proto
         }
         public List<Service> ListService()
         {
-            MySqlDataReader reader = GetReaderData("SELECT service_id, service_name, duration, sink_usage, ref_package_id, package_name FROM service LEFT JOIN package ON ref_package_id=package_id ORDER BY service_id");
+            MySqlDataReader reader = GetReaderData("SELECT service_id, service_name, duration, sink_usage, ref_package_id FROM service ORDER BY service_id");
 
             Boolean NotEOF = reader.Read();
 
@@ -436,12 +444,10 @@ namespace WPF_barber_proto
 
             while (NotEOF)
             {
-                //Console.WriteLine(reader["Name"].ToString() + ": " + reader["Id"].ToString());
-                bool isUsingSink = false;
-                if (reader["sink_usage"].ToString() == "1") isUsingSink = true;
-                serviceList.Add(new Service(reader["service_id"].ToString(), reader["service_name"].ToString(), Int32.Parse(reader["duration"].ToString()), isUsingSink, Int32.Parse(reader["ref_package_id"].ToString()), reader["package_name"].ToString()));
+                serviceList.Add(new Service(reader["service_id"].ToString(), reader["service_name"].ToString(), Int32.Parse(reader["duration"].ToString()), bool.Parse(reader["sink_usage"].ToString()), Int32.Parse(reader["ref_package_id"].ToString()) ));
                 NotEOF = reader.Read();
             }
+            reader.Close();
             return serviceList;
         }
         public List<Package> ListPackage()
@@ -458,6 +464,7 @@ namespace WPF_barber_proto
                 packageList.Add(new Package(reader["package_id"].ToString(), reader["package_name"].ToString()));
                 NotEOF = reader.Read();
             }
+            reader.Close();
             return packageList;
         }
         
@@ -573,12 +580,67 @@ namespace WPF_barber_proto
 
             MySqlDataReader reader;
             reader = command.ExecuteReader();
-
             return reader;
         }
 
 
 
+
+
+
+        //Adding
+        public bool AddNewStaff(string name)
+        {
+            if (AddNewStaff(name, FindValidNewStaffId())) return true;
+            return false;
+        }
+        private bool AddNewStaff(string name, string id)
+        {            
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = "INSERT INTO staff(staff_id, staff_name) VALUES ('" + id + "','" + name + "')";
+                command.ExecuteNonQuery();
+                return true;
+        }
+
+        public bool AddNewCustomer(string name, string phone)
+        {
+            return AddNewCustomer(name, phone, FindValidNewCustId());
+        }
+        private bool AddNewCustomer(string name, string phone, string id)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = "INSERT INTO customer(customer_id, customer_name, customer_phone) VALUES ('" + id + "','" + name + "','" + phone + "')";
+            command.ExecuteNonQuery();
+            return true;
+        }
+
+        public bool AddNewService(string name, int duration, bool sink, int package)
+        {
+            return AddNewService(name, duration, sink, package, FindValidNewServId());
+        }
+        private bool AddNewService(string name, int duration, bool sink, int package, string id)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = "INSERT INTO service(service_id, service_name, duration, sink_usage, ref_package_id) VALUES ('" + id + "','" + name + "','" + duration + "','" + sink + "','" + package + "')";
+            command.ExecuteNonQuery();
+            return true;
+        }
+
+        public bool AddNewPackage(string name)
+        {
+            return (AddNewPackage(name, FindValidNewPackId())) ;
+        }
+        private bool AddNewPackage(string name, string id)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = "INSERT INTO package(package_id, package_name) VALUES ('" + id + "','" + name + "')";
+            command.ExecuteNonQuery();
+            return true;
+        }
 
 
 
@@ -591,8 +653,14 @@ namespace WPF_barber_proto
         {
             return DeleteRowFromTable("staff", "staff_id", staff.Id.ToString());
         }
-
-
+        public bool DeleteService(Service service)
+        {
+            return DeleteRowFromTable("service", "service_id", service.Id.ToString());
+        }
+        public bool DeletePackage(Package package)
+        {
+            return DeleteRowFromTable("package", "package_id", package.Id.ToString());
+        }
 
 
 
@@ -613,16 +681,6 @@ namespace WPF_barber_proto
                 return false;
             }
         }
-        private void DeleteRowFromTable(string from, string where, int rule)
-        {
-            string commandText = "DELETE FROM " + from + " WHERE " + where + " = '" + rule.ToString() + "'";
-            MySqlCommand command = new MySqlCommand();
-            command.Connection = connection;
-            command.CommandText = commandText;
-
-            command.ExecuteNonQuery();
-        }
-
 
         //Updating
         public bool UpdateStaff(Staff staff)
@@ -657,13 +715,45 @@ namespace WPF_barber_proto
                 return false;
             }
         }
+        public bool UpdateService(Service service)
+        {
+            int isSink = 0;
+            try
+            {
+                if (service.Sink == true) isSink = 1;                
+                string commandText = "UPDATE service SET service_name='" + service.Name + "', duration ='" + service.Duration + "', sink_usage ='" + isSink.ToString() + "', ref_package_id ='" + service.PackageId + "' WHERE service_id='" + service.Id + "'";
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
+        }
+        public bool UpdatePackage(Package package)
+        {
+            try
+            {
+                string commandText = "UPDATE package SET package_name='" + package.Name + "' WHERE package_id='" + package.Id + "'";
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
+        }
 
 
 
 
-
-
-        //IsCustNameExist
+        //IsNameExist
         private bool CustomerNameExists(string name)
         {
             foreach (Customer c in ListCustomers())

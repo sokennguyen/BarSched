@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WPF_barber_proto"
         mc:Ignorable="d"
         WindowState="Normal"
-        Title="MainWindow" Height="600" Width="920">   
+        Title="MainWindow" Height="800" Width="1050">   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

@@ -6,27 +6,91 @@
              xmlns:local="clr-namespace:WPF_barber_proto"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid x:Name="table">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Rectangle Fill="Orange"
-                   Margin="1,0,1,0"/>
-        <Rectangle Fill="Orange"
-                   Grid.Column="1"
-                   Margin="1,0,1,0"/>
-        <TextBlock Text="ID"
-                   Grid.Column="0"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
-        <TextBlock Text="Name"
-                   Grid.Column="1"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
+
+
+
+
+        <StackPanel x:Name="AddBoxes"
+                    Orientation="Horizontal">
+            <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"
+                     Visibility="Hidden"/>
+            <TextBox x:Name="AddBox"
+                 Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1"
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+            <Button x:Name="Add" 
+                    Width="50"
+                    Height="auto"
+                    Click="Add_Click">Add</Button>
+            <Button x:Name="Delete" 
+                    Width="50" 
+                    Height="20" 
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment="Left" 
+                    Grid.Row="1" Click="Delete_Click">Delete</Button>
+        </StackPanel>
+
+
+
+
+
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    x:Name="SeachBoxes">
+            <TextBox x:Name="IdSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
+            <TextBox Name="NameSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+        </StackPanel>
+
+        <Button x:Name="SearchButton"
+                Grid.Column="1"
+                Grid.Row="1"
+                Width="50"
+                HorizontalAlignment="Left">Search</Button>
+
+
+
+
+
+        <ScrollViewer Grid.Row="2"
+                      CanContentScroll="True">
+            <DataGrid x:Name="data"
+                  AutoGenerateColumns="False"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="True"
+                  FontSize="20"  
+                  RowEditEnding="data_RowEditEnding">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+
+            </DataGrid>
+        </ScrollViewer>
+
+
+
+
+
+
+
+
+
     </Grid>
 </UserControl>

@@ -17,17 +17,18 @@ namespace WPF_barber_proto
 {
     public partial class CustomerSubpage : UserControl
     {
+        HairdresserProgram HairdresserProgram = new HairdresserProgram();
         public CustomerSubpage()
         {
             InitializeComponent();
             data.ItemsSource = HairdresserProgram.ListCustomers();
         }
-        HairdresserProgram HairdresserProgram = new HairdresserProgram();
+        
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             Customer customer;
-            if (AddNameBox.Text == "" && AddPhoneBox.Text == "")
+            if (AddNameBox.Text == "" || AddPhoneBox.Text == "")
             {
                 MessageBox.Show("Please fill in all the fields", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
