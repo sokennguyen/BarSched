@@ -62,6 +62,7 @@
                 Grid.Column="1"
                 Grid.Row="1"
                 Width="50"
+                Click="SearchButton_Click"
                 HorizontalAlignment="Left">Search</Button>
 
 

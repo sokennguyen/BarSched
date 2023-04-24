@@ -63,6 +63,8 @@ namespace WPF_barber_proto
         {
             return myDB.UpdatePackage(package);
         }
+
+        //Add
         public bool SaveCustomerChanges(List<Customer> custList)
         {
             bool succeededSave = false;
@@ -97,14 +99,14 @@ namespace WPF_barber_proto
             else succeededSave = false;
             return succeededSave;
         }
+        //Search
+        public List<Staff> SearchStaff(Staff stf)
+        {
+            return myDB.SearchStaff(stf);
+        }
 
 
-
-        //public double GetBalance(Customer customer)
-        //{
-        //    string cID = customer.Id;
-        //    return myDB.GetBalanceOfCustomer(cID);
-        //}
+        
 
 
 
@@ -301,7 +303,7 @@ namespace WPF_barber_proto
         private void OpenConnection()
         {
             //for final iteration
-            connection = new MySqlConnection("Server=6.tcp.eu.ngrok.io;Port=19746;User ID=root;Database=barber");
+            connection = new MySqlConnection("Server=2.tcp.eu.ngrok.io;Port=11786;User ID=root;Database=barber");
             //connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");            
             connection.Open();
         }
@@ -748,44 +750,24 @@ namespace WPF_barber_proto
 
 
 
-
-        //IsNameExist
-        private bool CustomerNameExists(string name)
+        //Search
+        public List<Staff> SearchStaff(Staff stf)
         {
-            foreach (Customer c in ListCustomers())
-                if (c.Name == name)
-                    return true;
-            return false;
-        }
-        private bool CustomerNameExists(int id)
-        {
-            foreach (Customer c in ListCustomers())
-                if (c.Id == id)
-                    return true;
-            return false;
-        }
-
-
-        private bool StaffNameExists(string name)
-        {
+            List<Staff> foundList = new List<Staff>();
+            //There should be only 1 matchable ID
             foreach (Staff s in ListStaff())
-                if (s.Name == name)
-                    return true;
-            return false;
+                if (s.Id == stf.Id)
+                {
+                    foundList.Add(s);
+                    return foundList;
+                }
+            //Everything else can have multiple matches
+            foreach (Staff s in ListStaff())
+                if (s.Name.ToLower().Contains(stf.Name.ToLower()) && stf.Name != "")
+                        foundList.Add(s);
+            if (foundList.Count() == 0) return ListStaff();
+            else return foundList;
         }
-        private bool StaffIdExists(int id)
-        {
-            foreach (Customer c in ListCustomers())
-                if (c.Id == id)
-                    return true;
-            return false;
-        }
-
-
-
-
-
-
 
     }
 

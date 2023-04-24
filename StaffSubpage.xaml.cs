@@ -97,7 +97,14 @@ namespace WPF_barber_proto
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (IdSearchBox.Text == "" && NameSearchBox.Text == "")
+                data.ItemsSource = HairdresserProgram.ListStaff();
+            else
+            {
+                Staff stf = new Staff(IdSearchBox.Text, NameSearchBox.Text);
+                data.ItemsSource = HairdresserProgram.SearchStaff(stf);
+            }
+            
         }
     }
 }
