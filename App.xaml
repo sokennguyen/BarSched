@@ -18,6 +18,9 @@
                             </BulletDecorator>
                             <!--If item is checked, trigger the visibility of the mark-->
                             <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="FontWeight" Value="Light"/>
+                                </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="Background" Value="blue"/>
@@ -29,6 +32,7 @@
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter TargetName="Content" Property="TextBlock.Margin" Value="30,1,0,0"/>
                                 </Trigger>
+                                
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
