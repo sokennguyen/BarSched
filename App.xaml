@@ -4,6 +4,39 @@
              xmlns:local="clr-namespace:WPF_barber_proto"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="{x:Type RadioButton}" >
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <BulletDecorator Background="#EDBB64" Cursor="Hand">
+                                
+                                <!--Text element-->
+                                <TextBlock Margin="10,1,0,0" Foreground="Black" FontFamily="Calibri" FontSize="30">
+                                    <ContentPresenter />
+                                </TextBlock>
+                            </BulletDecorator>
+                            <!--If item is checked, trigger the visibility of the mark-->
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Background" Value="blue"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Background" Value="Purple"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="TextBlock.Padding" Value="30,1,0,0"/>
+                                    <Setter Property="Background" Value="Purple"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
