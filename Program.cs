@@ -66,47 +66,38 @@ namespace WPF_barber_proto
 
         //Add
         public bool SaveCustomerChanges(List<Customer> custList)
-        {
-            bool succeededSave = false;
-            if (custList.Count() > ListCustomers().Count())
-            {
-                succeededSave = myDB.AddNewCustomer(custList[custList.Count() - 1].Name, custList[custList.Count() - 1].Phone);
-            }
-            else succeededSave = false;
-            return succeededSave;
+        {            
+            return myDB.AddNewCustomer(custList[custList.Count() - 1].Name, custList[custList.Count() - 1].Phone);
         }
         public bool SaveStaffChanges(List<Staff> staffList)
         {
-            bool succeededSave = false;
-            if (staffList.Count() > ListStaff().Count())
-            {
-                succeededSave = myDB.AddNewStaff(staffList[staffList.Count() - 1].Name);
-            }
-            else succeededSave = false;
-            return succeededSave;
+            return myDB.AddNewStaff(staffList[staffList.Count() - 1].Name);
         }
         public bool SaveServiceChanges(List<Service> servList)
         {
             return myDB.AddNewService(servList[servList.Count() - 1].Name, servList[servList.Count() - 1].Duration, servList[servList.Count() - 1].Sink, servList[servList.Count() - 1].PackageId);
         }
         public bool SavePackageChanges(List<Package> packList)
-        {
-            bool succeededSave = false;
-            if (packList.Count() > ListPackage().Count())
-            {
-                succeededSave = myDB.AddNewPackage(packList[packList.Count() - 1].Name);
-            }
-            else succeededSave = false;
-            return succeededSave;
+        {            
+            return myDB.AddNewPackage(packList[packList.Count() - 1].Name);
         }
         //Search
         public List<Staff> SearchStaff(Staff stf)
         {
             return myDB.SearchStaff(stf);
         }
-
-
-        
+        public List<Customer> SearchCustomer(Customer cust)
+        {
+            return myDB.SearchCustomer(cust);
+        }
+        public List<Service> SearchService(Service serv)
+        {
+            return myDB.SearchService(serv);
+        }
+        public List<Package> SearchPackage(Package pack)
+        {
+            return myDB.SearchPackage(pack);
+        }
 
 
 
@@ -158,9 +149,9 @@ namespace WPF_barber_proto
     class Customer
     {
         private string name;
-        private int id;
+        private string id;
         private string phone;
-        public Customer(int id, string nm, string phone)
+        public Customer(string id, string nm, string phone)
         {
             this.id = id;
             this.name = nm;            
@@ -171,7 +162,7 @@ namespace WPF_barber_proto
         {
             return id + " : " + name + " : " + phone;
         }
-        public int Id
+        public string Id
         {
             get { return id; }
             set { id = value;}
@@ -220,10 +211,10 @@ namespace WPF_barber_proto
         
         private string id;
         private string name;
-        private int duration;
+        private string duration;
         private bool sink;
-        private int packageId;
-        public Service(string id, string nm, int duration, bool sink, int package)
+        private string packageId;
+        public Service(string id, string nm, string duration, bool sink, string package)
         {
             this.id = id;
             this.name = nm;
@@ -246,7 +237,7 @@ namespace WPF_barber_proto
             get { return name; }
             set { name = value; }
         }
-        public int Duration
+        public string Duration
         {
             get { return duration; }
             set { duration = value; }
@@ -256,7 +247,7 @@ namespace WPF_barber_proto
             get { return sink; }
             set { sink=value; }
         }
-        public int PackageId
+        public string PackageId
         {
             get { return packageId; }
             set { packageId = value; }
@@ -313,7 +304,7 @@ namespace WPF_barber_proto
 
 
 
-        
+
         private string FindValidNewCustId()
         {
             List<Customer> allCust = ListCustomers();
@@ -325,7 +316,7 @@ namespace WPF_barber_proto
                 validFound = true;
                 foreach (Customer c in allCust)
                 {
-                    if (c.Id == proposedID)
+                    if (c.Id == proposedID.ToString())
                     {
                         validFound = false;
                         break;
@@ -407,7 +398,7 @@ namespace WPF_barber_proto
             while (NotEOF)
             {
                 //Console.WriteLine(reader["Name"].ToString() + ": " + reader["Id"].ToString());
-                custList.Add(new Customer(Int32.Parse(reader["customer_id"].ToString()), reader["customer_name"].ToString(), reader["customer_phone"].ToString()));
+                custList.Add(new Customer(reader["customer_id"].ToString(), reader["customer_name"].ToString(), reader["customer_phone"].ToString()));
                 NotEOF = reader.Read();
             }
             reader.Close();
@@ -440,7 +431,7 @@ namespace WPF_barber_proto
 
             while (NotEOF)
             {
-                serviceList.Add(new Service(reader["service_id"].ToString(), reader["service_name"].ToString(), Int32.Parse(reader["duration"].ToString()), bool.Parse(reader["sink_usage"].ToString()), Int32.Parse(reader["ref_package_id"].ToString()) ));
+                serviceList.Add(new Service(reader["service_id"].ToString(), reader["service_name"].ToString(), reader["duration"].ToString(), bool.Parse(reader["sink_usage"].ToString()), reader["ref_package_id"].ToString()));
                 NotEOF = reader.Read();
             }
             reader.Close();
@@ -463,7 +454,7 @@ namespace WPF_barber_proto
             reader.Close();
             return packageList;
         }
-        
+
 
 
 
@@ -587,16 +578,15 @@ namespace WPF_barber_proto
         //Adding
         public bool AddNewStaff(string name)
         {
-            if (AddNewStaff(name, FindValidNewStaffId())) return true;
-            return false;
+            return AddNewStaff(name, FindValidNewStaffId());
         }
         private bool AddNewStaff(string name, string id)
-        {            
-                MySqlCommand command = new MySqlCommand();
-                command.Connection = connection;
-                command.CommandText = "INSERT INTO staff(staff_id, staff_name) VALUES ('" + id + "','" + name + "')";
-                command.ExecuteNonQuery();
-                return true;
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = "INSERT INTO staff(staff_id, staff_name) VALUES ('" + id + "','" + name + "')";
+            command.ExecuteNonQuery();
+            return true;
         }
 
         public bool AddNewCustomer(string name, string phone)
@@ -612,11 +602,11 @@ namespace WPF_barber_proto
             return true;
         }
 
-        public bool AddNewService(string name, int duration, bool sink, int package)
+        public bool AddNewService(string name, string duration, bool sink, string package)
         {
             return AddNewService(name, duration, sink, package, FindValidNewServId());
         }
-        private bool AddNewService(string name, int duration, bool sink, int package, string id)
+        private bool AddNewService(string name, string duration, bool sink, string package, string id)
         {
             int inpSink = 0;
             if (sink == true) inpSink = 1;
@@ -629,7 +619,7 @@ namespace WPF_barber_proto
 
         public bool AddNewPackage(string name)
         {
-            return (AddNewPackage(name, FindValidNewPackId())) ;
+            return (AddNewPackage(name, FindValidNewPackId()));
         }
         private bool AddNewPackage(string name, string id)
         {
@@ -664,7 +654,7 @@ namespace WPF_barber_proto
 
         private bool DeleteRowFromTable(string from, string where, string rule)
         {
-            
+
             try
             {
                 string commandText = "DELETE FROM " + from + " WHERE " + where + " = '" + rule + "'";
@@ -718,7 +708,7 @@ namespace WPF_barber_proto
             int isSink = 0;
             try
             {
-                if (service.Sink == true) isSink = 1;                
+                if (service.Sink == true) isSink = 1;
                 string commandText = "UPDATE service SET service_name='" + service.Name + "', duration ='" + service.Duration + "', sink_usage ='" + isSink.ToString() + "', ref_package_id ='" + service.PackageId + "' WHERE service_id='" + service.Id + "'";
                 MySqlCommand command = new MySqlCommand();
                 command.Connection = connection;
@@ -764,11 +754,63 @@ namespace WPF_barber_proto
             //Everything else can have multiple matches
             foreach (Staff s in ListStaff())
                 if (s.Name.ToLower().Contains(stf.Name.ToLower()) && stf.Name != "")
-                        foundList.Add(s);
-            if (foundList.Count() == 0) return ListStaff();
+                    foundList.Add(s);
+            if (foundList.Count() == 0) return null;
             else return foundList;
         }
+        public List<Customer> SearchCustomer(Customer cust)
+        {
+            List<Customer> foundList = new List<Customer>();
+            //There should be only 1 matchable ID
+            foreach (Customer c in ListCustomers())
+                if (c.Id == cust.Id)
+                {
+                    foundList.Add(c);
+                    return foundList;
+                }
 
+
+            //Using LINQ for filtering
+            IEnumerable<Customer> foundLINQ = ListCustomers().Where(c => c.Name.ToLower().Contains(cust.Name.ToLower())
+                                                                         && c.Phone.Contains(cust.Phone));
+            return foundLINQ.ToList();
+        }
+        public List<Service> SearchService(Service serv)
+        {
+            List<Service> foundList = new List<Service>();
+            //There should be only 1 matchable ID
+            foreach (Service s in ListService())
+                if (s.Id == serv.Id)
+                {
+                    foundList.Add(s);
+                    return foundList;
+                }
+
+
+            //Using LINQ for filtering
+            IEnumerable<Service> foundLINQ = ListService().Where(s => s.Name.ToLower().Contains(serv.Name.ToLower())
+                                                                         && s.Duration.Contains(serv.Duration)
+                                                                         && s.Sink == serv.Sink
+                                                                         && s.PackageId.Contains(serv.PackageId));
+            return foundLINQ.ToList();
+        }
+        public List<Package> SearchPackage(Package stf)
+        {
+            List<Package> foundList = new List<Package>();
+            //There should be only 1 matchable ID
+            foreach (Package s in ListPackage())
+                if (s.Id == stf.Id)
+                {
+                    foundList.Add(s);
+                    return foundList;
+                }
+            //Everything else can have multiple matches
+            foreach (Package s in ListPackage())
+                if (s.Name.ToLower().Contains(stf.Name.ToLower()) && stf.Name != "")
+                    foundList.Add(s);
+            if (foundList.Count() == 0) return null;
+            else return foundList;
+        }
     }
 
     class UI

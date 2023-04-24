@@ -60,7 +60,7 @@ namespace WPF_barber_proto
             var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new Service?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (InsertRecord == MessageBoxResult.Yes)
             {
-                service = new Service(null, value, int.Parse(AddDurationBox.Text), AddSinkBox.IsEnabled, int.Parse(AddPackageBox.Text));
+                service = new Service(null, value, AddDurationBox.Text, AddSinkBox.IsChecked.Value, AddPackageBox.Text);
                 AlteredServiceList = HairdresserProgram.ListService();
                 AlteredServiceList.Add(service);
                 if (HairdresserProgram.SaveServiceChanges(AlteredServiceList))
@@ -106,10 +106,10 @@ namespace WPF_barber_proto
                 MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-
-
-
-
-
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            Service serv = new Service(IdSearchBox.Text, NameSearchBox.Text, DurationSearchBox.Text, SinkSearchBox.IsChecked.Value, PackageSearchBox.Text);
+            data.ItemsSource = HairdresserProgram.SearchService(serv);
+        }
     }
 }

@@ -50,10 +50,7 @@ namespace WPF_barber_proto
                 AlteredStaffList = HairdresserProgram.ListStaff();
                 AlteredStaffList.Add(staff);
                 if (HairdresserProgram.SaveStaffChanges(AlteredStaffList))
-                {
                     data.ItemsSource = HairdresserProgram.ListStaff();
-                    MessageBox.Show("\"" + staff.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
                 else
                 {
                     data.ItemsSource = HairdresserProgram.ListStaff();
@@ -78,8 +75,6 @@ namespace WPF_barber_proto
                         Staff staff = row as Staff;
                         isComplete = HairdresserProgram.DeleteStaff(staff);
                     }
-                    if (isComplete)
-                        MessageBox.Show(countSelected + " Employees have being deleted!");
                     if (isComplete==false)
                         MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     data.ItemsSource = HairdresserProgram.ListStaff();

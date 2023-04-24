@@ -39,14 +39,11 @@ namespace WPF_barber_proto
             var InsertRecord = MessageBox.Show("Do you want to add " + value + " as a new customer?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (InsertRecord == MessageBoxResult.Yes)
             {
-                customer = new Customer(-1, value, AddPhoneBox.Text);
+                customer = new Customer(null, value, AddPhoneBox.Text);
                 AlteredCustomerList = HairdresserProgram.ListCustomers();
                 AlteredCustomerList.Add(customer);
                 if (HairdresserProgram.SaveCustomerChanges(AlteredCustomerList))
-                {
                     data.ItemsSource = HairdresserProgram.ListCustomers();
-                    MessageBox.Show("\"" + customer.Name + "\"" + " has being added!", "Inserting Record", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
                 else
                 {
                     data.ItemsSource = HairdresserProgram.ListCustomers();
@@ -85,6 +82,17 @@ namespace WPF_barber_proto
             Customer cust = e.Row.DataContext as Customer;
             if (HairdresserProgram.UpdateCustomer(cust) == false)
                 MessageBox.Show("Unable to execute query, remove linked data first to proceed.", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IdSearchBox.Text == "" && NameSearchBox.Text == "" && PhoneSearchBox.Text == "")
+                data.ItemsSource = HairdresserProgram.ListCustomers();
+            else
+            {
+                Customer cust = new Customer(IdSearchBox.Text, NameSearchBox.Text, PhoneSearchBox.Text);
+                data.ItemsSource = HairdresserProgram.SearchCustomer(cust);
+            }
         }
 
 

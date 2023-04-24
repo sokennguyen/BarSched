@@ -60,20 +60,26 @@
 
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal">
-            <TextBox Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
-            <TextBox Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
-            <TextBox Width="{Binding ElementName=data, Path=Columns[2].ActualWidth}"/>
-            <CheckBox VerticalAlignment="Center"
+            <TextBox x:Name="IdSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[0].ActualWidth}"/>
+            <TextBox x:Name="NameSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[1].ActualWidth}"/>
+            <TextBox x:Name="DurationSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[2].ActualWidth}"/>
+            <CheckBox x:Name="SinkSearchBox"
+                      VerticalAlignment="Center"
                       HorizontalAlignment="Center"
                       Width="{Binding ElementName=data, Path=Columns[3].ActualWidth}"/>
-            <TextBox Width="{Binding ElementName=data, Path=Columns[4].ActualWidth}"/>
+            <TextBox x:Name="PackageSearchBox"
+                     Width="{Binding ElementName=data, Path=Columns[4].ActualWidth}"/>
         </StackPanel>
 
         <Button x:Name="SearchButton"
                 Grid.Column="1"
                 Grid.Row="1"
                 Width="50"
-                HorizontalAlignment="Left">Search</Button>
+                HorizontalAlignment="Left"
+                Click="SearchButton_Click">Search</Button>
 
 
 

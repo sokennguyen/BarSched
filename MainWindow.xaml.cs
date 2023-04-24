@@ -19,6 +19,8 @@ using MySqlConnector;
 using System.Collections.ObjectModel;
 using System.Runtime.Remoting.Messaging;
 using System.Windows.Controls.Primitives;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace WPF_barber_proto
 {    public partial class MainWindow : Window
@@ -47,12 +49,46 @@ namespace WPF_barber_proto
         {
             MainTitle.Content = "Employee Performances";
             CollaspAllView();
-        }
 
+            DataTable dt = new DataTable();
+            string connString = "Server=localhost;Port=3306;User ID=root;Database=barber";
+            string query = "SELECT staff_id, COUNT(appointment_id) AS appointment_count FROM appointment GROUP BY staff_id ORDER BY staff_id";
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connString))
+                {
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    conn.Open();
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                    adapter.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message);
+            }
+
+            SeriesCollection seriesCollection = new SeriesCollection();
+            foreach (DataRow row in dt.Rows)
+            {
+                int staffId = Convert.ToInt32(row["staff_id"]);
+                int numAppointments = Convert.ToInt32(row["appointment_count"]);
+
+                seriesCollection.Add(new LineSeries
+                {
+                    Title = $"Staff {staffId}",
+                    Values = new ChartValues<int> { numAppointments }
+                });
+            }
+
+            DataContext = new { SeriesCollection = seriesCollection };
+            Stats.Visibility = Visibility.Visible;
+        }
         private void CollaspAllView()
         {
             Editor.Visibility = Visibility.Collapsed;
             Reserve_cal.Visibility = Visibility.Collapsed;
+            Stats.Visibility = Visibility.Collapsed;
         }
         
 
@@ -150,6 +186,9 @@ namespace WPF_barber_proto
 
             // Show the pop-up window
             popupWindow.ShowDialog();
-        }
+        }       
+
+
+        
     }
 }
