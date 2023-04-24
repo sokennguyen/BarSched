@@ -12,7 +12,7 @@
                             <BulletDecorator Background="#EDBB64" Cursor="Hand">
                                 
                                 <!--Text element-->
-                                <TextBlock Margin="10,1,0,0" Foreground="Black" FontFamily="Calibri" FontSize="30">
+                                <TextBlock x:Name="Content" Margin="10,1,0,0" Foreground="Black" FontFamily="Calibri" FontSize="30">
                                     <ContentPresenter />
                                 </TextBlock>
                             </BulletDecorator>
@@ -24,12 +24,10 @@
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="Background" Value="Purple"/>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="True">
                                     <Setter Property="FontWeight" Value="Bold"/>
-                                    <Setter Property="TextBlock.Padding" Value="30,1,0,0"/>
-                                    <Setter Property="Background" Value="Purple"/>
+                                    <Setter TargetName="Content" Property="TextBlock.Margin" Value="30,1,0,0"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
