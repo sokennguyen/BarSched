@@ -45,6 +45,7 @@ namespace WPF_barber_proto
             CollaspAllView();
             Editor.Visibility = Visibility.Visible;
         }
+        // "Stats" button handling the Employees Performances
         private void ButtonThird_Click(object sender, RoutedEventArgs e)
         {
             MainTitle.Content = "Employee Performances";
@@ -52,7 +53,7 @@ namespace WPF_barber_proto
 
             DataTable dt = new DataTable();
             string connString = "Server=localhost;Port=3306;User ID=root;Database=barber";
-            string query = "SELECT staff_id, COUNT(appointment_id) AS appointment_count FROM appointment GROUP BY staff_id ORDER BY staff_id";
+            string query = "SELECT s.staff_id, s.staff_name, COUNT(a.appointment_id) AS appointment_count FROM appointment a JOIN staff s ON a.staff_id = s.staff_id GROUP BY s.staff_id, s.staff_name ORDER BY s.staff_id";
             try
             {
                 using (MySqlConnection conn = new MySqlConnection(connString))
@@ -69,17 +70,22 @@ namespace WPF_barber_proto
             }
 
             SeriesCollection seriesCollection = new SeriesCollection();
+
             foreach (DataRow row in dt.Rows)
             {
                 int staffId = Convert.ToInt32(row["staff_id"]);
+                string staffName = row["staff_name"].ToString();
                 int numAppointments = Convert.ToInt32(row["appointment_count"]);
 
-                seriesCollection.Add(new LineSeries
+                seriesCollection.Add(new ColumnSeries
                 {
-                    Title = $"Staff {staffId}",
-                    Values = new ChartValues<int> { numAppointments }
+                    Title = staffName,
+                    Values = new ChartValues<int> { numAppointments },
+                    DataLabels = true,
+                    LabelPoint = chartPoint => string.Format("{0:N0}", chartPoint.Y)
                 });
             }
+
 
             DataContext = new { SeriesCollection = seriesCollection };
             Stats.Visibility = Visibility.Visible;

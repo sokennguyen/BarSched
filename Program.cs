@@ -294,7 +294,7 @@ namespace WPF_barber_proto
         private void OpenConnection()
         {
             //for final iteration
-            connection = new MySqlConnection("Server=2.tcp.eu.ngrok.io;Port=11786;User ID=root;Database=barber");
+            connection = new MySqlConnection("Server=7.tcp.eu.ngrok.io;Port=19617;User ID=root;Database=barber");
             //connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");            
             connection.Open();
         }
