@@ -81,6 +81,10 @@ namespace WPF_barber_proto
         {            
             return myDB.AddNewPackage(packList[packList.Count() - 1].Name);
         }
+        public bool SaveAppointmentChanges(List<Appointment> appointmentList)
+        {
+            return myDB.AddNewAppointment(appointmentList[appointmentList.Count() - 1].CustomerId, appointmentList[appointmentList.Count() - 1].StaffId, appointmentList[appointmentList.Count() - 1].PackageId, appointmentList[appointmentList.Count() - 1].StartTime, appointmentList[appointmentList.Count() - 1].ServiceId);
+        }
         //Search
         public List<Staff> SearchStaff(Staff stf)
         {
@@ -119,6 +123,10 @@ namespace WPF_barber_proto
         public List<Package> ListPackage()
         {
             return myDB.ListPackage();
+        }
+        public List<Appointment> ListAppointment()
+        {
+            return myDB.ListAppoinment();
         }
         
 
@@ -278,8 +286,56 @@ namespace WPF_barber_proto
             set { name = value;}
         }
     }
+    class Appointment
+    {
+        private string id;
+        private string refCustomerId;
+        private string refStaffId;
+        private string refPackageId;
+        private string startTime;
+        private string refServiceId;
+        public Appointment(string id, string refCustomerId, string refStaffId, string refPackageId, string startTime, string serviceId)
+        {
+            this.id = id;
+            this.refCustomerId = refCustomerId;
+            this.refStaffId = refStaffId;
+            this.refPackageId = refPackageId;
+            this.startTime = startTime;
+            this.refServiceId = serviceId;
+        }
+        public string Id
+        {
+            get { return id; }
+        }
 
-    class DBService
+        public string CustomerId
+        {
+            get { return refCustomerId; }
+            set { refCustomerId = value; }
+        }
+
+        public string StaffId
+        {
+            get { return refStaffId; }
+            set { refStaffId = value; }
+        }
+        public string PackageId
+        {
+            get { return refPackageId; }
+            set { refPackageId = value; }
+        }
+        public string StartTime
+        {
+            get { return startTime; }
+            set { startTime = value; }
+        }
+        public string ServiceId
+        {
+            get { return refServiceId; }
+            set { refServiceId = value; }
+        }
+    }
+        class DBService
     {
         private MySqlConnection connection;
         public DBService()
@@ -294,7 +350,7 @@ namespace WPF_barber_proto
         private void OpenConnection()
         {
             //for final iteration
-            connection = new MySqlConnection("Server=7.tcp.eu.ngrok.io;Port=19617;User ID=root;Database=barber");
+            connection = new MySqlConnection("Server=0.tcp.eu.ngrok.io;Port=19810;User ID=root;Database=barber");
             //connection = new MySqlConnection("Server=localhost;Port=3306;User ID=root;Database=barber");            
             connection.Open();
         }
@@ -386,6 +442,27 @@ namespace WPF_barber_proto
             return proposedID.ToString();
         }
 
+        private string FindValidNewAppId()
+        {
+            List<Appointment> allApp = ListAppoinment();
+            int proposedID = 0;
+            Boolean validFound = false;
+            while (!validFound)
+            {
+                proposedID++;
+                validFound = true;
+                foreach (Appointment a in allApp)
+                {
+                    if (a.Id == proposedID.ToString())
+                    {
+                        validFound = false;
+                        break;
+                    }
+                }
+            }
+            return proposedID.ToString();
+        }
+
         //Public list getters        
         public List<Customer> ListCustomers()
         {
@@ -454,7 +531,23 @@ namespace WPF_barber_proto
             reader.Close();
             return packageList;
         }
+        public List<Appointment> ListAppoinment()
+        {
+            MySqlDataReader reader = GetReaderData("SELECT appointment_id, customer_id, staff_id, package_id, start_time, ref_service_id FROM appointment ORDER BY appointment_id");
 
+            Boolean NotEOF = reader.Read();
+
+            List<Appointment> appointmentList = new List<Appointment>();
+
+            while (NotEOF)
+            {
+                //Console.WriteLine(reader["Name"].ToString() + ": " + reader["Id"].ToString());
+                appointmentList.Add(new Appointment(reader["appointment_id"].ToString(), reader["customer_id"].ToString(), reader["staff_id"].ToString(), reader["package_id"].ToString(), reader["start_time"].ToString(), reader["ref_service_id"].ToString()));
+                NotEOF = reader.Read();
+            }
+            reader.Close();
+            return appointmentList;
+        }
 
 
 
@@ -630,7 +723,18 @@ namespace WPF_barber_proto
             return true;
         }
 
-
+        public bool AddNewAppointment(string customerId, string staffId, string packageId, string startTime, string serviceId)
+        {
+            return AddNewAppointment(customerId,staffId,packageId,startTime,serviceId, FindValidNewAppId());
+        }
+        private bool AddNewAppointment(string customerId, string staffId, string packageId, string startTime, string serviceId, string id)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandText = "INSERT INTO appointment(appointment_id, customer_id, staff_id, package_id, start_time, ref_service_id) VALUES ('" + id + "','" + customerId + "','" + staffId + "','" + packageId + "','" + startTime + "','" + serviceId + "')";
+            command.ExecuteNonQuery();
+            return true;
+        }
 
         //Deletions
         public bool DeleteCustomer(Customer customer)

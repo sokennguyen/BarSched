@@ -182,10 +182,41 @@ namespace WPF_barber_proto
             }
         }
 
+
+        //private void tag()
+        //{
+        //    // get the current cell's row and column index
+        //    int rowindex = grid.getrow(clickedcell);
+        //    int columnindex = grid.getcolumn(clickedcell);
+
+        //    // set the cell's tag to the index of the appointment in the listbox
+        //    clickedcell.tag = rowindex * 7 + columnindex;
+
+        //    // color the cell red
+        //    clickedcell.background = brushes.red;
+        //}
+        private Border clickedCell;
         private void GridCell_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Get the clicked cell
-            Border clickedCell = sender as Border;
+
+            clickedCell = sender as Border;
+            if (clickedCell != null)
+            {
+                clickedCell.Background = Brushes.Red;
+            }
+            //Border clickedCell = (Border)sender;
+            //string sentence = "";
+
+            //// open the popup window and get the sentence
+            //popup popupWindow = new popup();
+            //popupWindow.ShowDialog();
+            //sentence = popupWindow.GetSentence();
+
+            //// set the Tag property of the clicked cell to the sentence
+            //clickedCell.Tag = sentence;
+
+            //// set the background color of the clicked cell to red
+            //clickedCell.Background = Brushes.Red;
 
             // Create a new pop-up window
             popup popupWindow = new popup();
