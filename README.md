@@ -1,1 +1,3 @@
-# WPF_barber_proto
+# BarSched
+
+A scheduler for barbershops
