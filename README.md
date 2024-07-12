@@ -1,1 +1,1 @@
-# WPF_barber_proto
+# Barber Scheduler
